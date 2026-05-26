@@ -8,17 +8,17 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
    1. [Sieć](#sieć)
    2. [Artefakty](#artefakty)
 2. [Ogólna forma ćwiczenia](#ogólna-forma-ćwiczenia)
-3. [Eksperyment elementarny](#eksperyment-elementarny-przebieg)
+3. [Pomiar elementarny](#pomiar-elementarny-przebieg)
    1. [Sekwencja działań](#sekwencja-działań)
-   2. [Parametryzacja strumienia ruchu (w ramach elementarnego eksperymentu)](#parametryzacja-strumienia-ruchu-w-ramach-elementarnego-eksperymentu)
+   2. [Parametryzacja strumienia ruchu (w ramach elementarnego pomiaru)](#parametryzacja-strumienia-ruchu-w-ramach-elementarnego-pomiaru)
       1. [Podstawowe strumienie ruchu i przykłady użycia](#podstawowe-strumienie-ruchu-i-przykłady-użycia)
       2. [Przypadek złożony: ruch ON/OFF](#przypadek-złożony-ruch-onoff)
       3. [Inne uwagi, przyomnienia](#inne-uwagi-przypomnienia)
-4. [Zadania do wykonania](#zadania-do-wykonania)
+4. [Opis zadań do wykonania](#opis-zadań-do-wykonania)
    1. [Ustalenie właściwego punktu pracy sieci](#ustalenie-właściwego-punktu-pracy-sieci)
       1. [Parametry: nastawy](#parametry-nastawy)
       2. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
-5. [DODATEK: optymalizacja wydajnościowa eksperymentu](#dodatek-optymalizacja-wydajnościowa-eksperymentu)
+5. [DODATEK: optymalizacja wydajnościowa pomiaru](#dodatek-optymalizacja-wydajnościowa-pomiaru)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
    2. [Moduł odbiorczy ITGRecv](#moduł-odbiorczy-itgrecv)
    3. [Moduł nadawczy ITGSend](#moduł-nadawczy-itgsend)
@@ -32,7 +32,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
 
 Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter (urządzenie komutacji pakietów) przenoszący ruch pakietowy pomiędzy hostami. Jako generatpr ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). 
 
-Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `hi-s1` oraz `s1-hi` (i=1,2) to interfejsy należące do linuksowych urządzeń typu _veth pair_ (ang. _virtual eth pair_). Pary te reprezentują "kable" ethernetowe łączące poszczególne urządzenia (więcej o parach veth, a także o `linux bridge` znajdziemy w dokumentacji Linuksa oraz w innych licznych źródłach dostępnych w Internecie). W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości eksperymentów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.   
+Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `hi-s1` oraz `s1-hi` (i=1,2) to interfejsy należące do linuksowych urządzeń typu _veth pair_ (ang. _virtual eth pair_). Pary te reprezentują "kable" ethernetowe łączące poszczególne urządzenia (więcej o parach veth, a także o `linux bridge` znajdziemy w dokumentacji Linuksa oraz w innych licznych źródłach dostępnych w Internecie). W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości pomiarów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.   
 
 ```
        ┌───────────────────┐              ┌───────────────────┐
@@ -65,25 +65,25 @@ W ramach ćwiczenia porównujemy wartości wybranych metryk jakościowych transf
 
 Podstawowe typy zmienności strumieni ruchu, które wykorzystamy, to przepływność pakietowa stała (ang. `constant packet rate`), napływ pakietów poissonowski oraz ruch typu _ON/OFF_ z założoną charakterystyką ruchu w okresach aktywności _ON_ (np. ruch typu `constant packet rate` lub poissonowski w okresie _ON_). Z wykorzystaniem narzędzia D-ITG można generować ruch także o innych własnościach niż powyżej wspomniane. Przykładowo, można generować ruch z opóźnieniem (odstępem czasowym) pomiędzy kolejnymi pakietami lub sekwencje stanów ON/OFF dla źródeł ON/OFF - opisane rozkładem Weibull'a (ruch samopodobny, całkiem dobrze modelujący ruch w rzeczywistych sieciach IP, zwłaszcza w płaszczyźnie "core", patrz np. [tutaj](https://www.sciencedirect.com/science/article/abs/pii/S1084804519301547)).
 
-W ramach ćwiczenia realizujemy serie badań sieci, każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu, a ich wyniki końcowe wyniki są wzajemnie porównywane. Każda seria badań obejmuje pewną liczbę _eksperymentów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik końcowy serii. Przed rozpoczęciem zasadniczej części ćwiczenia może być konieczne przeprowadzenie szeregu prób (eksperymentów elementarnych) w celu dostrojenia naszego systemu do środowiska obliczeniowego. Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie i może być konieczne dostosowanie pewnych parametrów naszego "systemu" (np. określenie sensownego zakresu wielkości bufora nadawczego rutera czy sensownego zakresu zmienności strumieni ruchu) do możliwości naszej platformy sprzętowo-programowej. Eksperymenty elementarne są opisane w sekcji [Eksperyment elementarny (przebieg)](#eksperyment-elementarny-przebieg), a zadania do wykonania wraz z opisem wymaganych do przeprowadzenia serii badań sieci przedstawionoo w sekcji [Zadania do wykonania](#zadania-do-wykonania).
+W ramach ćwiczenia realizujemy serie pomiarów sieci, każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu, a ich wyniki końcowe wyniki są wzajemnie porównywane. Każda seria pomiarów obejmuje pewną liczbę _pomiarów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik końcowy serii. Przed rozpoczęciem zasadniczej części ćwiczenia może być konieczne przeprowadzenie szeregu prób (pomiarów elementarnych) w celu dostrojenia naszego systemu do środowiska obliczeniowego. Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie i może być konieczne dostosowanie pewnych parametrów naszego "systemu" (np. określenie sensownego zakresu wielkości bufora nadawczego rutera czy sensownego zakresu zmienności strumieni ruchu) do możliwości naszej platformy sprzętowo-programowej. pomiary elementarne są opisane w sekcji [pomiar elementarny (przebieg)](#pomiar-elementarny-przebieg), a zadania do wykonania wraz z opisem wymaganych do przeprowadzenia serii pomiarów sieci przedstawiono w sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania).
 
 > [!Important]
 > Za realizację dodatkowego testu przy założeniu źródła o rozkładzie Weibull'a dla odstępu między kolejnymi generowanymi pakietami **zespołowi będzie przysługiwać bonus w wysokości 20%** nmominalnego _maksa_ za ćwiczenie.
 
 > [!Note]
-> Ze względu na uwarunkowania środowiska laboratoryjnego oraz rozwiązania implementacyjne generatora D-ITG poszczególne przebiegi pomiarowe (`eksperymenty elementarne`) przeprowadzane dla danego strumenia ruchu (w rozwinięciu: dla tego samego zbioru wartości parametrów opisujących zmienność generowanego strumienia ruchu) dają różne wyniki. Dla danego zbioru parametrów wymagane jest więc uśrednienie wyników zebranych co najmniej z kilku przebiegów (eksperymentów elementarnych). Dotychczasowe doświadczenia wskazują, że 10 prób pozwala uzyskać zadowalającą dokładność średniówki.
+> Ze względu na uwarunkowania środowiska laboratoryjnego oraz rozwiązania implementacyjne generatora D-ITG poszczególne przebiegi pomiarowe (`pomiary elementarne`) przeprowadzane dla danego strumenia ruchu (w rozwinięciu: dla tego samego zbioru wartości parametrów opisujących zmienność generowanego strumienia ruchu) dają różne wyniki. Dla danego zbioru parametrów wymagane jest więc uśrednienie wyników zebranych co najmniej z kilku przebiegów (pomiarów elementarnych). Dotychczasowe doświadczenia wskazują, że 10 prób pozwala uzyskać zadowalającą dokładność średniówki.
 
-# Eksperyment elementarny (_przebieg_)
+# Pomiar elementarny (_przebieg_)
 
   ## Sekwencja działań 
 
-Obsługa _elementarnego eksperymentu_ (jednego przebiegu pomiarowego) jest dość prosta. Środowisko sieciowe dla naszego eksperymentu jest tworzone z wykorzystaniem skryptu powłoki _bash_ o nazwie `lbr.sh`.
+Obsługa _elementarnego pomiaru_ (jednego przebiegu pomiarowego) jest dość prosta. Środowisko sieciowe dla naszego pomiaru jest tworzone z wykorzystaniem skryptu powłoki _bash_ o nazwie `lbr.sh`.
 
 Skrypt ten zawiera szereg komentarzy wyjaśniających istotne dla nas kwestie szczegółowe. Komentarze te bezpośrednio sąsiadują z odpowiednimi komendami zawierającymi, a więc są możliwie dobrze skorelowane z warstwą "wykonawczą" skryptu. Dlatego w niniejszym dokumencie zadowalamy się opisem ogólnym, po techniczne detale odsyłając czytelników do samego skryptu.
 
 Po wywołaniu skryptu komendą `sudo ./lbr.sh` tworzona jest sieć o topologii zilustrowanej wcześniej, a w hoście `h2` (w przestrzeni nazw sieciowych `h2`) uruchamiany jest odbiornik aplikacji D-ITG o nazwie `ITGRecv`. Odbiornik ten, na domyślnym porcie D-ITG (i na wszystkich interfejsach hosta `h2`), nasłuchuje nadchodzących pakietów generowanych przez stronę nadawczą `ITGSend`. W ramach tego skryptu nadajnik `ITGSend` NIE jest jednak uruchamiany. Skrypt `lbr.sh` wykonujemy tylko raz, na samym początku ćwiczenia.
 
-Po wykonaniu skryptu `lbr.sh` można przystąpić do realizacji serii eksperymentów. Jeden eksperyment polega na wygenerowaniu strumienia pakietów pomiędzy `ITGSend` oraz `ITGRecv` i zarejestrowaniu jego wyników dostępnych w formie pewnych statystyk podanych w logu. W tym celu należy:
+Po wykonaniu skryptu `lbr.sh` można przystąpić do realizacji kolejnych pomiarów. Jeden pomiar polega na wygenerowaniu strumienia pakietów pomiędzy `ITGSend` oraz `ITGRecv` i zarejestrowaniu jego wyników dostępnych w formie pewnych statystyk podanych w logu. W tym celu należy:
 
   * W **odrębnym oknie terminala** uruchomić stronę nadawczą `ITGSend`, skonfigurowaną z odpowiednimi parametrami w linii komendy (m.inn. adres strony odbiorczej, charakterystyka ruchu, czas trwania symulacji, nazwy logów nadawczego i odbiorczego i inn.). Moduł `ITGSend` uruchamiamy ręcznie w przestrzeni nazw `h1`, a przykładowa komenda ma formę (więcej o detalach parametryzacji komendy napisano w kolejnej podsekcji):
 
@@ -93,11 +93,11 @@ Po wykonaniu skryptu `lbr.sh` można przystąpić do realizacji serii eksperymen
 
   W przypadku konieczności restartowania odbiornika czy wystąpienia problemów ze środowiskiem całą sieć można usunąć (w celu ponownego jej utworzenia). W tym celu korzystamy ze skryptu powłoki _clean.sh_: `sudo ./clean.sh` (komunikaty o błędach z wykonania skryptu dotyczące nieistniejących urządzeń należy zignorować).
 
-  ## Parametryzacja strumienia ruchu (w ramach elementarnego eksperymentu)
+  ## Parametryzacja strumienia ruchu (w ramach elementarnego pomiaru)
 
   ### Podstawowe strumienie ruchu i przykłady użycia
 
-Jak już wspomniano, wykorzystujemy generator ruchu pakietowego D-ITG. Ma on dość dobry [manual (format pdf)](https://traffic.comics.unina.it/software/ITG/manual/D-ITG-2.8.1-manual.pdf), dlatego tutaj pomijamy szczegółowy opis zasad jego wykorzystania. Interesujące nas definicje/opisy zamieszczone są tam na stronie **13** (_Inter-departure time options_) i w jej okolicach. Końcowa część dokumentu zawiera przykładowe komendy dla generowania strumieni różnych typów. Dodatkowo, w naszym skrypcie `lbr.sh` (linie 218-251) znajdują się skomentowane przykłady ("działających") komend opracowanych na nasze potrzeby. Na nich powinniśmy bazować, dostosowując jedynie wartości wybranych parametrów do poszczególnych eksperymentów.
+Jak już wspomniano, wykorzystujemy generator ruchu pakietowego D-ITG. Ma on dość dobry [manual (format pdf)](https://traffic.comics.unina.it/software/ITG/manual/D-ITG-2.8.1-manual.pdf), dlatego tutaj pomijamy szczegółowy opis zasad jego wykorzystania. Interesujące nas definicje/opisy zamieszczone są tam na stronie **13** (_Inter-departure time options_) i w jej okolicach. Końcowa część dokumentu zawiera przykładowe komendy dla generowania strumieni różnych typów. Dodatkowo, w naszym skrypcie `lbr.sh` (linie 218-251) znajdują się skomentowane przykłady ("działających") komend opracowanych na nasze potrzeby. Na nich powinniśmy bazować, dostosowując jedynie wartości wybranych parametrów do poszczególnych pomiarów.
 
 Dla typowych opisów strumieni pakietów obowiązuje też uwaga interpretacyjna dotycząca odstępu czasu między pakietami, zamieszczona na stronie **14** manuala (cyt.):
 
@@ -140,7 +140,7 @@ W naszym przypadku (tj. w naszym skrypcie `lbr.sh`) znaczenie poszczególnych fr
 
 `/usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 200 -t 15000` - uruchamiana aplikacja (nasz generator ITGSend) ma słać ruch na adres 10.0.0.2, stosowć protokół UDP (-T UDP), formować pakiety o stałej długości 1500 bajtów (-c 1200) z szybkością generowania (tutaj w okresach ON, bo na końcu komendy występuje blok `-B`) równą 200 pakietów/sek (-C 200), całkowity czas trwania przebiegu ma wynosić 15000ms (czyli 15 sekund; -t 15000). Zapis `-C 200` odpowiada konkretnej charakterystyce strumienia w stanie ON (rozkład jednopunktowy) - w ogólnym przypadku może tu jednak wystąpić dowolny z rozkładów/zapisów określonych na stronie **13** manuala D-ITG (w naszym laboratorium zasadniczo posługujemy się tylko rozkładem jednopunktowym, chyba że zespół pokusi się o zadanie bonusowe z Weibull'em);
 
-`-j 1` - dodatkowo żądamy, aby nadajnik starał sie wysyłać wszystkie teoretycznie przewidziane dla strumienia pakiety - aby utrzymać wynikającą z teorii przepływność pakietową. Za tą opcją może stać pewna słabość generatora, a trochę więcej na ten temat wyjaśniono w manualu na stronie **15**. Ostatecznie, związany z nią pewien implementacyjny detal generatora może być przyczyną obserwowanej w naszych eksperymentach nie tylko niezgodności między oczekiwaną liczbą wygenerowanych pakietów a liczbą pakietów wygenerowanych faktycznie (np. dla rozkładu _constant_ (-C)), ale także zmiennej samej liczby pakietów faktycznie wygenerowanych w kolejnych przebiegach dla ustalonego strumienia ruchu. Rozbieżność ta rośnie wraz z założoną szybkością generacji pakietów. W efekcie **wszelkie analizy i wnioski należy opierać na danych pochodzących z logów strony odbiornika `ITGRecv`**, a wyniki dla danego strumienia należy uśredniać z wielu (np. 10) przebiegów. Logów nadajnika w ogóle można nie generować. **Rezygnacja z tworzenia logu nadajnika może być tym bardziej korzystna, że dodatkowo zaoszczędzi to czas procesora i nieco poprawi ogólną jakość wyników.**
+`-j 1` - dodatkowo żądamy, aby nadajnik starał sie wysyłać wszystkie teoretycznie przewidziane dla strumienia pakiety - aby utrzymać wynikającą z teorii przepływność pakietową. Za tą opcją może stać pewna słabość generatora, a trochę więcej na ten temat wyjaśniono w manualu na stronie **15**. Ostatecznie, związany z nią pewien implementacyjny detal generatora może być przyczyną obserwowanej w naszych pomiarach nie tylko niezgodności między oczekiwaną liczbą wygenerowanych pakietów a liczbą pakietów wygenerowanych faktycznie (np. dla rozkładu _constant_ (-C)), ale także zmiennej samej liczby pakietów faktycznie wygenerowanych w kolejnych przebiegach dla ustalonego strumienia ruchu. Rozbieżność ta rośnie wraz z założoną szybkością generacji pakietów. W efekcie **wszelkie analizy i wnioski należy opierać na danych pochodzących z logów strony odbiornika `ITGRecv`**, a wyniki dla danego strumienia należy uśredniać z wielu (np. 10) przebiegów. Logów nadajnika w ogóle można nie generować. **Rezygnacja z tworzenia logu nadajnika może być tym bardziej korzystna, że dodatkowo zaoszczędzi to czas procesora i nieco poprawi ogólną jakość wyników.**
 
 `-l sender.log -x receiver.log` - podajemy nazwy plików dla logów nadajnika i odbiornika; logi te powstają w specyficznym formacie oraz ze specyficzną zawartością i nie mają postaci czytelnej dla człowieka; czytelne, syntetyczne logi uzuskane na podstawie tych oryginalnych wyświetlamy w oknie terminala komendą `/usr/bin/ITGDec <log-filename>`
 
@@ -161,9 +161,9 @@ _Note:_
 _- The IDT random variable provides the inter-departure time expressed in milliseconds._
 _- For the sake of simplicity, in case of Constant, Uniform, Exponential and Poisson variables, each parameter, say it x, is considered as a packet rate value in packets per second. It is then internally converted to a IDT in milliseconds (y -> 1000/x)._
 
-* Jak już wcześniej podkreślono (także w opisie opcji `-j 1`), należy uwzględnić fakt, że wyniki przebiegów uzyskane dla danego zestawu parametrów różnią się między sobą, co pociąga konieczność realizowania serii prób (np. 10 prób) i uśredniania uzyskanych wyników.
+* Jak już wcześniej podkreślono (także w opisie opcji `-j 1`), należy uwzględnić fakt, że wyniki przebiegów uzyskane dla danego zestawu parametrów różnią się między sobą, co pociąga konieczność realizowania szeregu pomiarów (np. 10 prób) i uśredniania uzyskanych wyników.
 
-# Zadania do wykonania
+# Opis zadań do wykonania
 
 W ćwiczeniu zakładamy stały rozmiar pakietu. Generator D-ITG pozwala wprawdzie generować pakiety o losowym rozmiarze określonym różnymi rozkładami, ale to dodatkowo obciąża procesor, czego w naszym przypadku wolimy unikać.
 
@@ -174,7 +174,7 @@ Ogólny tok postępowania obejmuje
 Na wstępie nleży ustalić ogólny punkt pracy sieci dla swojego środowiska. Definiują go następujące parametry:
 
 * przepływność łącza `s1-h2`
-* rozmiar bufora (w założeniu nadawczego) dla interfejsu `s1-h2`; na tym interfejsie będzie koncentrować się ruch w kierunku hosta `h2` i tutaj pakiety będą doświadczać większych opóźnień i odrzucania (w naszym skrypcie pozostałe interfejsy są wymiarowane na "maksa", aby nie wpływały na wyniki eksperymentów)
+* rozmiar bufora (w założeniu nadawczego) dla interfejsu `s1-h2`; na tym interfejsie będzie koncentrować się ruch w kierunku hosta `h2` i tutaj pakiety będą doświadczać większych opóźnień i odrzucania (w naszym skrypcie pozostałe interfejsy są wymiarowane na "maksa", aby nie wpływały na wyniki pomiarów)
 * rozmiar pakietu: przyjętą w skrypcie `lbr.sh` wartość 1200 bajtów można uznać za właściwą i korygować tylko w uzasadnionych przypadkach
 
 Właściwą przepływność łącza `s1-h2` i rozmiar bufora dla interfejsu `s1-h2` ustalamy następująco.
@@ -184,9 +184,9 @@ W skrypcie `lbr.sh` parametry te są konfigurowane w linii 187 z użyciem narzę
 ```
 tc qdisc add dev s1-h2 root netem rate 1.2mbit limit 10`
 ```
-Konfiguruje ona przepływność łącza równą 1.2 Mbit/s oraz rozmiar bufora nadawczego równy 10 pakietów. To wartości bardzo skromne w porównaniu z prawdziwym sprzętem sieciowym, ale wystarczające do zilustrowania interesujących nas zjawisk w naszym wymagającym środowisku obliczeniowym. Podane tu konkretne wartości należy jednak traktować orientacyjnie. Zadaniem zespołu jest wstępne rozeznanie, czy na potrzeby prowadzenia eksperymentów w jego środowisku nie należałoby tych wartości zmodyfikować.
+Konfiguruje ona przepływność łącza równą 1.2 Mbit/s oraz rozmiar bufora nadawczego równy 10 pakietów. To wartości bardzo skromne w porównaniu z prawdziwym sprzętem sieciowym, ale wystarczające do zilustrowania interesujących nas zjawisk w naszym wymagającym środowisku obliczeniowym. Podane tu konkretne wartości należy jednak traktować orientacyjnie. Zadaniem zespołu jest wstępne rozeznanie, czy na potrzeby prowadzenia pomiarów w jego środowisku nie należałoby tych wartości zmodyfikować.
 
-W tym celu należy przeprowadzić pewną liczbę wstępnych eksperymentów elementarnych. W ramach tej wstępej serii, metodą prób i błędów, należy zmieniać przepływność i rozmiar bufora (czyli wielokrotnie usuwać sieć i tworzyć nową jej wersję), a dla każdej nowej wersji sieci sprawdzać straty pakietów dla strumieni typu _constant packet rate_ (opcja `-C`) przy różnych wartościach `X` szybkości tramsmisji: opcja `-C X`. Wykorzystywana w tym celu komenda generatora `ITGSend` powinna mieć postać (zaczerpniętą zresztą ze skryptu `lbr.sh`) jak poniżej, z zastrzeżeniem, że pole oznaczone jako `X` to właśnie modyfikowana przez nas szybkość transmisji nadajnika w [pakiety/sek]:
+W tym celu należy przeprowadzić pewną liczbę wstępnych pomiarów elementarnych. Na tym etapie, metodą prób i błędów, należy zmieniać przepływność i rozmiar bufora (czyli wielokrotnie usuwać sieć i tworzyć nową jej wersję), a dla każdej nowej wersji sieci sprawdzać straty pakietów dla strumieni typu _constant packet rate_ (opcja `-C`) przy różnych wartościach `X` szybkości tramsmisji: opcja `-C X`. Wykorzystywana w tym celu komenda generatora `ITGSend` powinna mieć postać (zaczerpniętą zresztą ze skryptu `lbr.sh`) jak poniżej, z zastrzeżeniem, że pole oznaczone jako `X` to właśnie modyfikowana przez nas szybkość transmisji nadajnika w [pakiety/sek]:
 
 ```
 sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C X -t 15000 -j 1 -l sender.log -x receiver.log
@@ -221,20 +221,21 @@ Packets dropped          =           252 (12.17 %)
 Average loss-burst size  =      1.000000 pkt
 ----------------------------------------------------------</pre>
 
-**Komentarz:** W istocie chcielibyśmy prowadzić obserwacje dla łączy o dużych przepływnościach i dużych buforach, i dla wysokich szybkości generowania pakietów przez nadajnik `ITGSend`. Lepiej oddawałoby to realne warunki pracy ruterów w sieciach. Jak widać powyżej, w naszym przypadku musimy jednak pogodzić się z niskimi wartościami tych parametrów. Powyższa procedura wskazuje tylko, w jaki sposób można spróbować je nieco zwiększyć względem nastaw domyślnych (zaczerpniętych ze skryptu `lbr.sh`).
+**Komentarz końcowy:** W istocie chcielibyśmy prowadzić pomiary łączy o dużych przepływnościach i dużych buforach, i przyu wysokich szybkościach generowania pakietów przez nadajnik `ITGSend`. Lepiej oddawałoby to realne warunki pracy ruterów w sieciach. Jak widać powyżej, w naszym przypadku musimy jednak pogodzić się z niskimi wartościami tych parametrów. Powyższa procedura wskazuje tylko, w jaki sposób można spróbować je nieco zwiększyć względem nastaw domyślnych (zaczerpniętych ze skryptu `lbr.sh`).
 
 ## Ćwiczenie zasadnicze
 
-Zgodnie z wcześniejszym komentarzem, zasadnicze ćwiczenie obejmuje kilka _serii badań_ sieci, a każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący `-C`), strumień Poissona (parametr definiujący `-P`) oraz strumień ON/OFF (parametr definiujący `-B` na końcu komendy), a wyniki końcowe badań są wzajemnie porównywane. Każda _seria badań_ obejmuje pewną liczbę _eksperymentów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik danej końcowy _serii badań_.
+Zgodnie z wcześniejszym komentarzem, zasadnicze ćwiczenie obejmuje kilka _serii pomiarów_ sieci, a każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący `-C`), strumień Poissona (parametr definiujący `-P`) oraz strumień ON/OFF (parametr definiujący `-B` na końcu komendy), a wyniki końcowe badań są wzajemnie porównywane. Każda _seria pomiarów_ obejmuje pewną liczbę _pomiarów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik danej końcowy _serii pomiarów_.
 
-W kolejnych dwóch podsekcjach przedstawiamy, odpowiednio, zasady parametryzacji eksperymentów oraz sposób realizacji jednej _serii badań_.
+W kolejnych dwóch podsekcjach przedstawiamy, odpowiednio, zasady parametryzacji pomiarów oraz sposób realizacji jednej _serii pomiarów_.
 
 ### Parametry: nastawy
 
+Ustaliwszy [właściwy punkt pracy sieci](#ustalenie-właściwego-punktu-pracy-sieci) jesteśmy przygotowani do przeprowadzenia docelowych badań. Zbierzmy w jednym miejscu nasze główne założenia. Cześć z nich dotyczy do wszystkich badań, a część tylko badań poświęconym ruchowi typu ON/OFF. Poniżej przedstawiamy je w dwóch odpowiednich grupach.
 
 * parametry wspólne
 
-Dla wszystkich serii badań stosujemy protokół UDP (parametr `-T UDP`), ten sam rozmiar pakietu (parametr `-c`) oraz czas trwania próby (parametr `-t`). Oczywiście nastawy interfejsu `s1-h2` również mają być wspólne dla wszystkich serii badań.  
+Dla wszystkich serii pomiarów stosujemy protokół UDP (parametr `-T UDP`), ten sam rozmiar pakietu (parametr `-c`) oraz czas trwania próby (parametr `-t`). Oczywiście nastawy interfejsu `s1-h2` z poprzedniej podsekcji również mają być wspólne dla wszystkich serii pomiarów.  
 
 * źródło ruchu ON/OFF
 
@@ -244,21 +245,30 @@ $$
 CV = \frac{\sqrt{t_{off} \cdot (t_{on} + t_{off})}}{t_{on}}
 $$
 
-Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.618 \cdot t_{off}$, współczynnik wariancji obserwowanej chwilowej przepływności pakietowej przyjmuje wartość 1. Spodziewamy się, że dla źródeł ON/OFF warto skalować nasz eksperyment z czasami _t<sub>on</sub>_ proporcjonalnie krótszymi względem _t<sub>off</sub>_ niż w tej zależności (czyli o wartościach współczynnika proporcjonalności względem _t<sub>off</sub>_ poniżej 1.618).
+Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.618 \cdot t_{off}$, współczynnik wariancji obserwowanej chwilowej przepływności pakietowej przyjmuje wartość 1. Spodziewamy się, że dla źródeł ON/OFF warto skalować nasz pomiar z czasami _t<sub>on</sub>_ proporcjonalnie krótszymi względem _t<sub>off</sub>_ niż w tej zależności (czyli o wartościach współczynnika proporcjonalności względem _t<sub>off</sub>_ poniżej 1.618).
+
+### Seria pomiarów
+
+Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-nastawy) serię pomiarów organizujemy następująco:
+
+* Ustalenie zakresu pomiarowego na osi odciętych - zakresu szybkości generowania pakietów przez aplikację `ITGSend` (prościej, jest to zakres zmian dla osi odciętych). Zasadniczo, **krok ten realizujemy tylko przed przystąpieniem do pierwszej serii pomiarów**. Jeśli seria jest realizowana jako kolejna, wówczas krok ten pomijamy (z zastrzeżeniem możliwości rozszerzenia zakresu w uzasadnionych przypadkach). Zakres ten powinien być na tyle szeroki, aby dla większych szybkości generowania pakietów z tego zakresu występowały zauważalne (np. 5-10%), a dla największych duże (np. 30-50%) straty pakietów. Oczywiście zakres ten można będzie później zmienić, na przykład rozszerzyć i dorobić brakujące pomiary, ale dobrze jest już na wstępie oszacować obszar działań, aby lepiej rozłożyć _punkty pomiarowe_ na osi odciętych (punkt pomiarowy to oczekiwana osiągana szybkość generowania pakietów przez źródło). Liczba punktów pomiarowych z przedziału 7-10 wydaje się wystarczająca w naszym przypadku; zważywszy na kolejkowy chrakter obserwowanych procesów lepiej jest zagęszczać punkty pomiarowe w kierunku rosnących wartości na osi odciętych. Kluczowa jest tutaj właściwa interpretacja terminu "oczekiwana osiągana szybkość generowania pakietów przez źródło", dlatego jeszcze raz przypominamy: to szybkość wyliczona na podstawie liczby pakietów faktycznie zarejestrowanych w logu odbiorcy `ITGRecv`, wyliczana jako $(Total\_packets + Packets\_dropped) / 1000$. 
+* W tak ustalonym zakresie pomiarowym rozkładamy (typujemy) _punkty pomiarowe_ (szybkości generowania pakietów mające faktycznie być osiągnięte - przynajmniej z przybliżeniem).
+* Dla każdego z wyznaczonych punktów pomiarowych przeprowadzamy pewną liczbę wstępnych [pomiarów elementarnych](#pomiar-elementarny-przebieg) zmieniając **teoretyczną** szybkość generowania pakietów `X` (w parametrach `-C X` czy `-O X`) tak, aby ostatecznie średniówka dla wyrażenia $(Total\_packets + Packets\_dropped) / 1000$ z kilku takich pomiarów dla ustalonej wartości `X` z dobrym przybliżeniem odpowiadała zakładanemu punktowi pomiarowemu. W uproszczeniu, wyszukujemy wartość `X`, dla której faktycznie osiągana szybkość generowania pakietów (dokładniej: jej wartość uśredniona z kilku przebiegów) z grubsza odpowiada bieżącemu punktowi pomiarowemu. Wartość ta zwykle będzie mniejsza od wartości teoretycznej.
+* Teraz przeprowadzamy podstawową serię pomiarową: dla wartości `X` wyznaczonej w poprzednim kroku realizujemy szereg (np. 10) pomiarów elementarnych, po każdym z nich rejestrując wyniki (liczba pakietów wygenerowanych jako )
 
 ## Raport: wyniki i wnioski
 
-W raporcie należy przedstawić w formie graficznej charakterystryki opóźnieniowe i strat pakietów (po uśrednieniu z eksperymentów elementarnych) dla poszczególnych (trzech) badanych rodzajów ruchu. Charakterystyka powinna przedstawiać zależność (uśrednionej) wartości danej metryki (opóźnienie, strata pakietów) względem <u>uzyskanej szybkości</u> napływu (generowania przez `ITGSend`) pakietów. Oczywiście - jak już wspomniano wcześniej - _uzyskana szybkość_ napływu pakietów powinna być wartością średnią z wielu (np. 10) przebiegów elementarnych przeprowadzonych dla danego zestawu parametrów strumienia pakietów.
+W raporcie należy przedstawić w formie graficznej charakterystryki opóźnieniowe i strat pakietów (po uśrednieniu z pomiarów elementarnych) dla poszczególnych (trzech) badanych rodzajów ruchu. Charakterystyka powinna przedstawiać zależność (uśrednionej) wartości danej metryki (opóźnienie, strata pakietów) względem <u>uzyskanej szybkości</u> napływu (generowania przez `ITGSend`) pakietów. Oczywiście - jak już wspomniano wcześniej - _uzyskana szybkość_ napływu pakietów powinna być wartością średnią z wielu (np. 10) przebiegów elementarnych przeprowadzonych dla danego zestawu parametrów strumienia pakietów.
 
-Na podstawie przedstawionych charakterystyk należy wzajemnie porównać eksperymenty i **przedstawić syntetyczne wnioski płynące z ćwiczenia**.
+Na podstawie przedstawionych charakterystyk należy wzajemnie porównać pomiary i **przedstawić syntetyczne wnioski płynące z ćwiczenia**.
 
-Uwaga: wnioski mają zawierać własne przemyślenia, refleksje, podsumowania zdobytej wiedzy/umiejętności, a także mogą zawierać uwagi odnośnie do stopnia złożoności/formy laboratorium, sugestie na przyszłość, etc. Natomiast do wniosków nie zalicza się streszczenia przebiegu ćwiczenia (skuteczność działań widać na podstawie przedstawionych charakterystyk) czy listy zrealizowanych eksperymentów (ja wiem jakie one są). Można oczywiście opisać napotkane problemy, sposoby ich pokonania czy zastosowane niestandardowe zabiegi.
+Uwaga: wnioski mają zawierać własne przemyślenia, refleksje, podsumowania zdobytej wiedzy/umiejętności, a także mogą zawierać uwagi odnośnie do stopnia złożoności/formy laboratorium, sugestie na przyszłość, etc. Natomiast do wniosków nie zalicza się streszczenia przebiegu ćwiczenia (skuteczność działań widać na podstawie przedstawionych charakterystyk) czy listy zrealizowanych pomiarów (wiem na podstawie wyników jakie one były). Można oczywiście skomentować napotkane problemy, sposoby ich pokonania czy zastosowane niestandardowe zabiegi.
 
-W przypadku realizacji **zadania bonusowego** należy wyraźnie zaznaczyć fakt jego podjęcia i wskazać miejsce opisania (najlepiej na początku raportu).
+W przypadku realizacji **zadania bonusowego** należy wyraźnie zaznaczyć fakt jego podjęcia i wskazać miejsce opisania (najlepiej anonsować to na początku raportu).
 
-# DODATEK: optymalizacja wydajnościowa eksperymentu
+# DODATEK: optymalizacja wydajnościowa pomiaru
 
-Generacja ruchu pakietowego o zadanych własnościach statystycznych nie jest trywialna w aspekcie wydajnościowym. Powodem jest konieczność wysyłania kolejnych pakietów w odstępach czasowych, które są generowane zgodnie z założonym dla danego strumienia procesem stochastycznym, utrzymując jednocześnie dużą szybkość generowania pakietów (np. emulując ruch mający dobrze dociążyć łącze 1GBit/s należy generować ok. 100 tys. pakietów na sekundę). Dla typowego sprzętu "domowego", zwłaszcza korzystając z wirtualizowanych środowisk, może to być spore wyswanie. Jast tak w szczególności w przypadku wykorzystywania aplikacji D-ITG. Z tego powodu staramy się zoptymalizować systemowe ustawienia aplikacji - zwłaszcza strony nadawczej `ITGSend` - pod kątem wydajnościowym. Pomimo tego nie udaje się uzyskać idealnych warunków pracy generatora. Dotyczy to w szczególności rozbieżności pomiędzy zakładaną (teoretyczną) a faktycznie wygenerowaną w założonym czasie liczbą pakietów. Dlatego wnioski należy ostatecznie "kalibrować" względem wartości faktycznie uzyskanych, a nie teoretycznie wynikających z przyjętych ustawień; o kalibracji więcej napisano w sekcji [Zadania do wykonania](#zadania-do-wykonania).
+Generacja ruchu pakietowego o zadanych własnościach statystycznych nie jest trywialna w aspekcie wydajnościowym. Powodem jest konieczność wysyłania kolejnych pakietów w odstępach czasowych, które są generowane zgodnie z założonym dla danego strumienia procesem stochastycznym, utrzymując jednocześnie dużą szybkość generowania pakietów (np. emulując ruch mający dobrze dociążyć łącze 1GBit/s należy generować ok. 100 tys. pakietów na sekundę). Dla typowego sprzętu "domowego", zwłaszcza korzystając z wirtualizowanych środowisk, może to być spore wyswanie. Jast tak w szczególności w przypadku wykorzystywania aplikacji D-ITG. Z tego powodu staramy się zoptymalizować systemowe ustawienia aplikacji - zwłaszcza strony nadawczej `ITGSend` - pod kątem wydajnościowym. Pomimo tego nie udaje się uzyskać idealnych warunków pracy generatora. Dotyczy to w szczególności rozbieżności pomiędzy zakładaną (teoretyczną) a faktycznie wygenerowaną w założonym czasie liczbą pakietów. Dlatego wnioski należy ostatecznie "kalibrować" względem wartości faktycznie uzyskanych, a nie teoretycznie wynikających z przyjętych ustawień; o kalibracji więcej napisano w sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania).
 
   ## Maszyna goszcząca i maszyna wirtualna
 
