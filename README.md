@@ -1,6 +1,6 @@
 # Co tutaj mamy
 
-Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów kierowanych przez wyjściowy imnterfejs urządzenia przełączającego na opóźnienie i straty pakietów.
+Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów wychodzących przez wyjściowy interfejs urządzenia przełączającego na opóźnienie i straty pakietów. Celem ćwiczenia jest ugruntowanie wiedzy na temat zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji także zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk.
 
 # Spis treści
 
@@ -16,9 +16,11 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
       3. [Inne uwagi, przyomnienia](#inne-uwagi-przypomnienia)
 4. [Opis zadań do wykonania](#opis-zadań-do-wykonania)
    1. [Ustalenie właściwego punktu pracy sieci](#ustalenie-właściwego-punktu-pracy-sieci)
+   2. [Ćwiczenie właściwe](#ćwiczenie-właściwe)
       1. [Parametry: ustawienia](#parametry-ustawienia)
-      2. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
-5. [DODATEK: optymalizacja wydajnościowa pomiaru](#dodatek-optymalizacja-wydajnościowa-pomiaru)
+      2. [Seria pomiarów](#seria-pomiarów)
+   3. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
+5. [DODATEK: optymalizacja wydajnościowa pomiarów](#dodatek-optymalizacja-wydajnościowa-pomiarów)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
    2. [Moduł odbiorczy ITGRecv](#moduł-odbiorczy-itgrecv)
    3. [Moduł nadawczy ITGSend](#moduł-nadawczy-itgsend)
@@ -28,9 +30,9 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
   ## Sieć
 
 > [!Note]
-> W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego konfiguracja naszego środowiska (w szczególności wielkość bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w rzeczywistych urządzeniach sieciowych. Ważne jest jednak, że pomimo dużych uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
+> W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego konfiguracja naszego środowiska (w szczególności wielkość bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w urządzeniach rzeczywistej sieci. Ważne jest jednak, że pomimo dużych uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
 
-Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter (urządzenie komutacji pakietów) przenoszący ruch pakietowy pomiędzy hostami. Jako generatpr ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). 
+Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter przenoszący ruch pakietowy pomiędzy hostami. Jako generatpr ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). 
 
 Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `hi-s1` oraz `s1-hi` (i=1,2) to interfejsy należące do linuksowych urządzeń typu _veth pair_ (ang. _virtual eth pair_). Pary te reprezentują "kable" ethernetowe łączące poszczególne urządzenia (więcej o parach veth, a także o `linux bridge` znajdziemy w dokumentacji Linuksa oraz w innych licznych źródłach dostępnych w Internecie). W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości pomiarów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.   
 
@@ -55,7 +57,7 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
 
   ## Artefakty
 
-Podstawową instrukcją do laboratorium jest niniejszy dokument. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik należy traktować jak integralną część instrukcji o statusie Dodatku.
+Niniejszy dokument jest podstawową instrukcją do laboratorium. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik należy traktować jak integralną część instrukcji o statusie Dodatku.
 
 Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. W ramach przedmiotu TESIN studenci otrzymują kompletny obraz maszyny wirtualnej dla nadzorcy VirtualBox z zainstalowanym systemem operacyjnym Ubuntu 24.04 Desktop i dodatkami VBoxGuestAdditions, skonfigurowanej z kompletem wymaganych artefaktów (zainstalowany D-ITG, dostępne wymagane skrypty _bash_ do tworzenia i do usuwania sieci). Obraz ten - o nazwie `tesin` - jest dostępny w naszym Teams. Artefakty są dostępne na koncie użytkownika `student` w katalogu `~/Labs/traffic`. Nic nie stoi jednak na przeszkodzie, aby środowisko skonfigurować samodzielnie wg własnych upodobań (ale pod Linuksem), a same skrypty pobrać z katalogu `skrypty` w tym repozytorium (w przypadku korzystania z innej dystrybucji Linuksa niż Ubuntu może być konieczne zbudowanie wersji binarnej D-ITG ze źródeł - wg opisu dostępnego [tutaj](https://github.com/jbucar/ditg/blob/master/INSTALL)).
 
@@ -195,7 +197,7 @@ sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 
 Startujemy z parametrami łącza `s1-h2` w formie `rate 1.2mbit limit 10` i wartością `X` równą 100 (pakietów/sek). Starmy się podwyższać przepływność łącza i rozmiar bufora, a dla konkretnych nastaw dla łącza - podwyższać `X` tak, aby
 
 * w logu odbiornika zaczęły pojawiać się niezerowe straty pakietów (log odbiornika sprawdzamy komendą `/usr/bin/ITGDec receiver.log`),
-* A JEDNOCZEŚNIE liczba faktycznie wygenerowanych pakietów nie była zbyt mała w stosunku do wartości teoretycznej (np. nie spadła poniżej 75% wartości teoretycznej). Wartość faktyczna (zrealizowana) na podstawie logu odbiornika to suma pól _Total packets_ i _Packets dropped_ (por opis w skrypcie `lbr.sh`); wartość teoretyczna to iloczyn wartości parametrów komendy `-C` i `-t` podzielony przez `1000`: $Ct/1000$. Kończymy poszukiwania kiedy uznamy, że nasze (wprawdzie dość miękkie) ograniczenia zostały wyczerpane. Log odbiornika na mastępujący wygląd - widać tu pola wymienione powyżej:
+* A JEDNOCZEŚNIE liczba faktycznie wygenerowanych pakietów nie była zbyt mała w stosunku do wartości teoretycznej (np. nie spadła poniżej 75% wartości teoretycznej). Wartość faktyczna (osiągnięta) na podstawie logu odbiornika to suma pól _Total packets_ i _Packets dropped_ (por opis w skrypcie `lbr.sh`); natomiast wartość teoretyczna to iloczyn wartości parametrów komendy `-C` i `-t` podzielony przez `1000`: $Ct/1000$. Kończymy poszukiwania kiedy uznamy, że nasze (wprawdzie dość miękkie) ograniczenia zostały wyczerpane. Log odbiornika na następujący wygląd - widać tu pola wymienione powyżej (komentarz _kursywą_ jest mój):
 
 <pre>-----------------------------------------------------------
 ---
@@ -227,7 +229,7 @@ Average loss-burst size  =      1.000000 pkt
 
 To główny etap realizacji laboratorium.
 
-Zgodnie z wcześniejszym komentarzem, etap ten obejmuje kilka _serii pomiarów_ sieci, a każda z nich dotyczy innego typu (innej charakterystyki) strumienia ruchu pakietowego. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący w komendzie ITGSend `-C`), strumień Poissona (parametr definiujący w komendzie ITGSend `-P`) oraz strumień ON/OFF (parametr definiujący w komendzie ITGSend `-B` umieszczony na końcu komendy). Ostatecznym wynikiem _serii pomiarów_ jest - obrazowo to ujmując - wykres(y) przedstawiający eksperymentalnie wyznaczony przebieg opóźnienia i straty pakietów w funkcji szybkości napływu pakietów dla danego typu strumienia ruchu. Wyniki końcowe wszystkich _serii pomiarów_ są analizowane i na tej podstawie formułowane są wnioski końcowe.
+Zgodnie z wcześniejszym komentarzem, etap ten obejmuje kilka _serii pomiarów_ sieci, a każda z nich dotyczy określonego typu (innej charakterystyki) strumienia ruchu pakietowego. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący w komendzie ITGSend `-C`), strumień Poissona (parametr definiujący w komendzie ITGSend `-P`) oraz strumień ON/OFF (parametr definiujący w komendzie ITGSend `-B` umieszczony na końcu komendy). Ostatecznym wynikiem jednej _serii pomiarów_ jest - obrazowo to ujmując - wykres (lub wykresy) przedstawiający eksperymentalnie wyznaczony przebieg opóźnienia i straty pakietów w funkcji szybkości napływu pakietów dla określonego typu strumienia ruchu pakietowego. Wyniki końcowe wszystkich _serii pomiarów_ podlegają analizie przez zespół laboratoryjny i na tej podstawie formułowane są wnioski końcowe.
 
 Każda _seria pomiarów_ obejmuje pewną liczbę _punktowych serii pomiarowych_, gdzie każda punktowa seria pomiarowa służy do oszacowania wartości interesujących nas metryk (opóźnienia i straty pakietów) dla <u>zadanej</u> szybkości generowania pakietów. Zestaw wielu punktowych serii pomiarowych (każda dla innej szybkości generowania pakietów) pozwala wykreślić graficzną zależność naszych metryk w funkcji szybkości napływu (generowania) pakietów. Punktowa seria pomiarowa obejmuje natomiast szereg (np. 10) _pomiarów elementarnych_ (wszystkie przeprowadzone dla ustalonych parametrów strumienia), których uśrednione wyniki stanowią końcowy rezultat danej _punktowej serii pomiarowej_.
 
@@ -274,9 +276,9 @@ Uwaga: wnioski mają zawierać własne przemyślenia, refleksje, podsumowania zd
 
 W przypadku realizacji **zadania bonusowego** należy wyraźnie zaznaczyć fakt jego podjęcia i wskazać miejsce opisania (najlepiej anonsować to na początku raportu).
 
-# DODATEK: optymalizacja wydajnościowa pomiaru
+# DODATEK: optymalizacja wydajnościowa pomiarów
 
-Generacja ruchu pakietowego o zadanych własnościach statystycznych nie jest trywialna w aspekcie wydajnościowym. Powodem jest konieczność wysyłania kolejnych pakietów w odstępach czasowych, które są generowane zgodnie z założonym dla danego strumienia procesem stochastycznym, utrzymując jednocześnie dużą szybkość generowania pakietów (np. emulując ruch mający dobrze dociążyć łącze 1GBit/s należy generować ok. 100 tys. pakietów na sekundę). Dla typowego sprzętu "domowego", zwłaszcza korzystając z wirtualizowanych środowisk, może to być spore wyswanie. Jast tak w szczególności w przypadku wykorzystywania aplikacji D-ITG. Z tego powodu staramy się zoptymalizować systemowe ustawienia aplikacji - zwłaszcza strony nadawczej `ITGSend` - pod kątem wydajnościowym. Pomimo tego nie udaje się uzyskać idealnych warunków pracy generatora. Dotyczy to w szczególności rozbieżności pomiędzy zakładaną (teoretyczną) a faktycznie wygenerowaną w założonym czasie liczbą pakietów. Dlatego wnioski należy ostatecznie "kalibrować" względem wartości faktycznie uzyskanych, a nie teoretycznie wynikających z przyjętych ustawień; o kalibracji więcej napisano w sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania).
+Generacja ruchu pakietowego o zadanych własnościach statystycznych nie jest trywialna w aspekcie wydajnościowym. Powodem jest konieczność wysyłania kolejnych pakietów w odstępach czasowych, które są generowane zgodnie z założonym dla danego strumienia procesem stochastycznym, utrzymując jednocześnie dużą szybkość generowania pakietów (np. emulując ruch mający dobrze dociążyć łącze 1GBit/s należy generować ok. 100 tys. pakietów na sekundę). Dla typowego sprzętu "domowego", zwłaszcza korzystając z wirtualizowanych środowisk, może to być wyzwanie ponad miarę. Jast tak w szczególności w przypadku wykorzystywania aplikacji D-ITG. Z tego powodu staramy się zoptymalizować systemowe ustawienia aplikacji - zwłaszcza strony nadawczej `ITGSend` - pod kątem wydajnościowym. Pomimo tego nie udaje się uzyskać idealnych warunków pracy generatora. Dotyczy to w szczególności rozbieżności pomiędzy zakładaną (teoretyczną) a faktycznie wygenerowaną w założonym czasie liczbą pakietów. Dlatego wnioski należy ostatecznie "kalibrować" względem wartości faktycznie uzyskanych, a nie teoretycznie wynikających z przyjętych ustawień; o kalibracji więcej napisano w sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania).
 
   ## Maszyna goszcząca i maszyna wirtualna
 
