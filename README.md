@@ -7,7 +7,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
   ## Sieć
 
 > [!Note]
-> W zamyśle ćwiczenie ma zilustrować **istotę** wpływu charakterystyki ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego konfiguracja środowiska sieciowego (w szczególności wielkość bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w dużej sieci. Ważne jest jednak, że nawet przy dużych uproszczeniach główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
+> W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego konfiguracja naszego środowiska (w szczególności wielkość bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w rzeczywistych urządzeniach sieciowych. Ważne jest jednak, że pomimo dużych uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
 
 Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter (urządzenie komutacji pakietów) przenoszący ruch pakietowy pomiędzy hostami. Jako generatpr ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). 
 
@@ -31,6 +31,10 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
        │                                                      │
        └──────────────────────────────────────────────────────┘
 ```
+
+  ## Artefakty
+
+Podstawową instrukcję do laboratorium stanowi niniejszy dokument. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik należy traktować jak integralną część instrukcji o statusie Dodatku.
 
 Jak wspomniano wyżej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. W ramach przedmiotu TESIN studenci otrzymują obraz maszyny wirtualnej dla nadzorcy VirtualBox z zainstalowanym systemem operacyjnym Ubuntu 24.04 Desktop, skonfigurowanej z kompletem wymaganych artefaktów (zainstalowany D-ITG, dostępne wymagane skrypty _bash_ do tworzenia i do usuwania sieci). Obraz ten - o nazwie `tesin` - jest dostępny w naszym Teams. Nic nie stoi jednak na przeszkodzie, aby środowisko skonfigurować samodzielnie wg własnych upodobań (ale pod Linuksem), a same skrypty pobrać z katalogu `skrypty` w tym repozytorium.
 
