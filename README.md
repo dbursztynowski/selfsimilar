@@ -16,7 +16,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
       3. [Inne uwagi, przyomnienia](#inne-uwagi-przypomnienia)
 4. [Opis zadań do wykonania](#opis-zadań-do-wykonania)
    1. [Ustalenie właściwego punktu pracy sieci](#ustalenie-właściwego-punktu-pracy-sieci)
-      1. [Parametry: nastawy](#parametry-nastawy)
+      1. [Parametry: ustawienia](#parametry-ustawienia)
       2. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
 5. [DODATEK: optymalizacja wydajnościowa pomiaru](#dodatek-optymalizacja-wydajnościowa-pomiaru)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
@@ -40,7 +40,7 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
        │    ┌─────────┐    │              │    ┌─────────┐    │
        │    │ ITGSend │    │              │    │ ITGRecv │    │
        │    └────┬────┘    │              │    └────┬────┘    │
-       │         V         │              │         Λ         │
+       │     UDP V         │              │     UDP Λ         │
        │    ┌────┴────┐    │              │    ┌────┴────┐    │
        │    │  h1-s1  │10.0.0.1           │    │  h2-s1  │10.0.0.2
        └────└────┬────┘────┘              └────└────┬────┘────┘
@@ -48,7 +48,7 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
        ┌────┌────┴────┐────────────────────────┌────┴────┐────┐
        │    │  s1-h1  │                        │  s1-h2  │    │
        │    └─────────┘                        └─────────┘    │
-       │                          s1                          │
+       │                          s1         konfigurowane tc │
        │                                                      │
        └──────────────────────────────────────────────────────┘
 ```
@@ -65,7 +65,7 @@ W ramach ćwiczenia porównujemy wartości wybranych metryk jakościowych transf
 
 Podstawowe typy zmienności strumieni ruchu, które wykorzystamy, to przepływność pakietowa stała (ang. `constant packet rate`), napływ pakietów poissonowski oraz ruch typu _ON/OFF_ z założoną charakterystyką ruchu w okresach aktywności _ON_ (np. ruch typu `constant packet rate` lub poissonowski w okresie _ON_). Z wykorzystaniem narzędzia D-ITG można generować ruch także o innych własnościach niż powyżej wspomniane. Przykładowo, można generować ruch z opóźnieniem (odstępem czasowym) pomiędzy kolejnymi pakietami lub sekwencje stanów ON/OFF dla źródeł ON/OFF - opisane rozkładem Weibull'a (ruch samopodobny, całkiem dobrze modelujący ruch w rzeczywistych sieciach IP, zwłaszcza w płaszczyźnie "core", patrz np. [tutaj](https://www.sciencedirect.com/science/article/abs/pii/S1084804519301547)).
 
-W ramach ćwiczenia realizujemy serie pomiarów sieci, każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu, a ich wyniki końcowe wyniki są wzajemnie porównywane. Każda seria pomiarów obejmuje pewną liczbę _pomiarów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik końcowy serii. Przed rozpoczęciem zasadniczej części ćwiczenia może być konieczne przeprowadzenie szeregu prób (pomiarów elementarnych) w celu dostrojenia naszego systemu do środowiska obliczeniowego. Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie i może być konieczne dostosowanie pewnych parametrów naszego "systemu" (np. określenie sensownego zakresu wielkości bufora nadawczego rutera czy sensownego zakresu zmienności strumieni ruchu) do możliwości naszej platformy sprzętowo-programowej. pomiary elementarne są opisane w sekcji [pomiar elementarny (przebieg)](#pomiar-elementarny-przebieg), a zadania do wykonania wraz z opisem wymaganych do przeprowadzenia serii pomiarów sieci przedstawiono w sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania).
+W ramach ćwiczenia realizujemy serie pomiarów sieci, każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu, a ich wyniki końcowe wyniki są wzajemnie porównywane. Każda seria pomiarów obejmuje pewną liczbę _pomiarów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik końcowy serii. Przed rozpoczęciem właściwej części ćwiczenia może być konieczne przeprowadzenie szeregu prób (pomiarów elementarnych) w celu dostrojenia naszego systemu do środowiska obliczeniowego. Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie i może być konieczne dostosowanie pewnych parametrów naszego "systemu" (np. określenie sensownego zakresu wielkości bufora nadawczego rutera czy sensownego zakresu zmienności strumieni ruchu) do możliwości naszej platformy sprzętowo-programowej. pomiary elementarne są opisane w sekcji [pomiar elementarny (przebieg)](#pomiar-elementarny-przebieg), a zadania do wykonania wraz z opisem wymaganych do przeprowadzenia serii pomiarów sieci przedstawiono w sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania).
 
 > [!Important]
 > Za realizację dodatkowego testu przy założeniu źródła o rozkładzie Weibull'a dla odstępu między kolejnymi generowanymi pakietami **zespołowi będzie przysługiwać bonus w wysokości 20%** nmominalnego _maksa_ za ćwiczenie.
@@ -223,19 +223,23 @@ Average loss-burst size  =      1.000000 pkt
 
 **Komentarz końcowy:** W istocie chcielibyśmy prowadzić pomiary łączy o dużych przepływnościach i dużych buforach, i przyu wysokich szybkościach generowania pakietów przez nadajnik `ITGSend`. Lepiej oddawałoby to realne warunki pracy ruterów w sieciach. Jak widać powyżej, w naszym przypadku musimy jednak pogodzić się z niskimi wartościami tych parametrów. Powyższa procedura wskazuje tylko, w jaki sposób można spróbować je nieco zwiększyć względem nastaw domyślnych (zaczerpniętych ze skryptu `lbr.sh`).
 
-## Ćwiczenie zasadnicze
+## Ćwiczenie właściwe
 
-Zgodnie z wcześniejszym komentarzem, zasadnicze ćwiczenie obejmuje kilka _serii pomiarów_ sieci, a każda z nich dotyczy innego rodzaju (innej charakterystyki) strumienia ruchu. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący `-C`), strumień Poissona (parametr definiujący `-P`) oraz strumień ON/OFF (parametr definiujący `-B` na końcu komendy), a wyniki końcowe badań są wzajemnie porównywane. Każda _seria pomiarów_ obejmuje pewną liczbę _pomiarów elementarnych_ (prób), których wyniki po uśrednieniu składają się na wynik danej końcowy _serii pomiarów_.
+To główny etap realizacji laboratorium.
 
-W kolejnych dwóch podsekcjach przedstawiamy, odpowiednio, zasady parametryzacji pomiarów oraz sposób realizacji jednej _serii pomiarów_.
+Zgodnie z wcześniejszym komentarzem, etap ten obejmuje kilka _serii pomiarów_ sieci, a każda z nich dotyczy innego typu (innej charakterystyki) strumienia ruchu pakietowego. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący w komendzie ITGSend `-C`), strumień Poissona (parametr definiujący w komendzie ITGSend `-P`) oraz strumień ON/OFF (parametr definiujący w komendzie ITGSend `-B` umieszczony na końcu komendy). Ostatecznym wynikiem _serii pomiarów_ jest - obrazowo to ujmując - wykres(y) przedstawiający eksperymentalnie wyznaczony przebieg opóźnienia i straty pakietów w funkcji szybkości napływu pakietów dla danego typu strumienia ruchu. Wyniki końcowe wszystkich _serii pomiarów_ są analizowane i na tej podstawie formułowane są wnioski końcowe.
 
-### Parametry: nastawy
+Każda _seria pomiarów_ obejmuje pewną liczbę _punktowych serii pomiarowych_, gdzie każda punktowa seria pomiarowa służy do oszacowania wartości interesujących nas metryk (opóźnienia i straty pakietów) dla <u>zadanej</u> szybkości generowania pakietów. Zestaw wielu punktowych serii pomiarowych (każda dla innej szybkości generowania pakietów) pozwala wykreślić graficzną zależność naszych metryk w funkcji szybkości napływu (generowania) pakietów. Punktowa seria pomiarowa obejmuje natomiast szereg (np. 10) _pomiarów elementarnych_ (wszystkie przeprowadzone dla ustalonych parametrów strumienia), których uśrednione wyniki stanowią końcowy rezultat danej _punktowej serii pomiarowej_.
+
+W kolejnych dwóch podsekcjach przedstawiamy, odpowiednio, zasady parametryzacji pomiarów oraz sposób realizacji jednej _serii pomiarów_. Realizacja takiej serii dla każdego z interesujących nas typów strumienia ruchu pakietowego wypełnia "operacyjną" część laboratorium. Jest ona podstawą do analizy i sformułowania wniosków końcowych.
+
+### Parametry: ustawienia
 
 Ustaliwszy [właściwy punkt pracy sieci](#ustalenie-właściwego-punktu-pracy-sieci) jesteśmy przygotowani do przeprowadzenia docelowych badań. Zbierzmy w jednym miejscu nasze główne założenia. Cześć z nich dotyczy do wszystkich badań, a część tylko badań poświęconym ruchowi typu ON/OFF. Poniżej przedstawiamy je w dwóch odpowiednich grupach.
 
 * parametry wspólne
 
-Dla wszystkich serii pomiarów stosujemy protokół UDP (parametr `-T UDP`), ten sam rozmiar pakietu (parametr `-c`) oraz czas trwania próby (parametr `-t`). Oczywiście nastawy interfejsu `s1-h2` z poprzedniej podsekcji również mają być wspólne dla wszystkich serii pomiarów.  
+Dla wszystkich serii pomiarów stosujemy protokół UDP (parametr `-T UDP`), ten sam rozmiar pakietu (parametr `-c`) oraz czas trwania próby (parametr `-t`). Oczywiście ustawienia interfejsu `s1-h2` z poprzedniej podsekcji również mają być wspólne dla wszystkich serii pomiarów.  
 
 * źródło ruchu ON/OFF
 
@@ -249,12 +253,16 @@ Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.61
 
 ### Seria pomiarów
 
-Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-nastawy) serię pomiarów organizujemy następująco:
+Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-ustawienia) serię pomiarów organizujemy następująco:
 
 * Ustalenie zakresu pomiarowego na osi odciętych - zakresu szybkości generowania pakietów przez aplikację `ITGSend` (prościej, jest to zakres zmian dla osi odciętych). Zasadniczo, **krok ten realizujemy tylko przed przystąpieniem do pierwszej serii pomiarów**. Jeśli seria jest realizowana jako kolejna, wówczas krok ten pomijamy (z zastrzeżeniem możliwości rozszerzenia zakresu w uzasadnionych przypadkach). Zakres ten powinien być na tyle szeroki, aby dla większych szybkości generowania pakietów z tego zakresu występowały zauważalne (np. 5-10%), a dla największych duże (np. 30-50%) straty pakietów. Oczywiście zakres ten można będzie później zmienić, na przykład rozszerzyć i dorobić brakujące pomiary, ale dobrze jest już na wstępie oszacować obszar działań, aby lepiej rozłożyć _punkty pomiarowe_ na osi odciętych (punkt pomiarowy to oczekiwana osiągana szybkość generowania pakietów przez źródło). Liczba punktów pomiarowych z przedziału 7-10 wydaje się wystarczająca w naszym przypadku; zważywszy na kolejkowy chrakter obserwowanych procesów lepiej jest zagęszczać punkty pomiarowe w kierunku rosnących wartości na osi odciętych. Kluczowa jest tutaj właściwa interpretacja terminu "oczekiwana osiągana szybkość generowania pakietów przez źródło", dlatego jeszcze raz przypominamy: to szybkość wyliczona na podstawie liczby pakietów faktycznie zarejestrowanych w logu odbiorcy `ITGRecv`, wyliczana jako $(Total\_packets + Packets\_dropped) / 1000$. 
-* W tak ustalonym zakresie pomiarowym rozkładamy (typujemy) _punkty pomiarowe_ (szybkości generowania pakietów mające faktycznie być osiągnięte - przynajmniej z przybliżeniem).
-* Dla każdego z wyznaczonych punktów pomiarowych przeprowadzamy pewną liczbę wstępnych [pomiarów elementarnych](#pomiar-elementarny-przebieg) zmieniając **teoretyczną** szybkość generowania pakietów `X` (w parametrach `-C X` czy `-O X`) tak, aby ostatecznie średniówka dla wyrażenia $(Total\_packets + Packets\_dropped) / 1000$ z kilku takich pomiarów dla ustalonej wartości `X` z dobrym przybliżeniem odpowiadała zakładanemu punktowi pomiarowemu. W uproszczeniu, wyszukujemy wartość `X`, dla której faktycznie osiągana szybkość generowania pakietów (dokładniej: jej wartość uśredniona z kilku przebiegów) z grubsza odpowiada bieżącemu punktowi pomiarowemu. Wartość ta zwykle będzie mniejsza od wartości teoretycznej.
-* Teraz przeprowadzamy podstawową serię pomiarową: dla wartości `X` wyznaczonej w poprzednim kroku realizujemy szereg (np. 10) pomiarów elementarnych, po każdym z nich rejestrując wyniki (liczba pakietów wygenerowanych jako )
+* W tak ustalonym zakresie pomiarowym wybieramy _punkty pomiarowe odniesienia_ (szybkości generowania pakietów mające faktycznie być osiągnięte - przynajmniej z przybliżeniem - jako wartości odniesienia).
+* Dla każdego z wyznaczonych punktów pomiarowych odniesienia przeprowadzamy pewną liczbę wstępnych [pomiarów elementarnych](#pomiar-elementarny-przebieg) zmieniając **teoretyczną** szybkość generowania pakietów `X` (w parametrach `-C X` czy `-O X`) tak, aby ostatecznie wartość średnia wyrażenia $(Total\_packets + Packets\_dropped) / 1000$ z kilku takich pomiarów, przeprowadzonych dla ustalonej wartości `X`, z dobrym przybliżeniem odpowiadała zakładanemu punktowi pomiarowemu odniesienia. W uproszczeniu, metodą prób i błędów wyszukujemy taką wartość `X`, dla której faktycznie osiągana szybkość generowania pakietów (dokładniej: jej wartość uśredniona z kilku przebiegów) z grubsza odpowiada bieżącemu punktowi pomiarowemu odniesienia. Wartość faktycznie osiągnięta zwykle będzie mniejsza od wartości teoretycznej.
+* Teraz, dla każdego punktu pomiarowego odniesienia, przeprowadzamy właściwą _punktową serię pomiarową_:
+  * dla wartości `X` wyznaczonej w poprzednim kroku dla tego punktu odniesienia realizujemy szereg (np. 10) [pomiarów elementarnych](#pomiar-elementarny-przebieg), po każdym z nich zapisując jego wyniki cząstkowe jako wartości następujących metryk: **(1)** liczba pakietów faktycznie wygenerowanych równa $(Total\_packets + Packets\_dropped) / 1000$, **(1)** strata pakietów jako wartość pola _Packets dropped_ w logu, **(1)** średnie opóźnienie pakietu jako wartość pola _Average delay_ w logu
+  * po wykonaniu wszystkich pomiarów elementarnych w ramach punktowej serii pomiarowej uśredniamy wartość każdej z wymienionych metryk. Przy sporządzaniu wykresów średniówki opóźnienia i strat pakietów powinny znaleźć się w punkcie o współrzędnej na osi odciętej równej wartości średniej wyrażenia $(Total\_packets + Packets\_dropped) / 1000$ (chociaż punkt odniesienia wskazuje na teoretyczną szybkość generowania pakietów równą `X`).
+* Po zrealizowaniu wszystkich _punktowych serii pomiarowych_ dla danego typu strumienia pakietów sporządzamy odpowiednie wykresy (dla strat pakietów i dla opóźnienia). Tym kończymy daną punktową serię pomiarową.
+* Następnie albo przechodzimy do realizacji _serii pomiarów_ dla kolejnego niezbadanego jeszcze typu strumienia, albo kończymy pomiary i przechodzimy do analizy wyników i sporządzania wniosków.
 
 ## Raport: wyniki i wnioski
 
