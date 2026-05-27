@@ -255,7 +255,7 @@ Dla wszystkich serii pomiarów stosujemy protokół UDP (parametr `-T UDP`), ten
 
 * źródło ruchu ON/OFF
 
-W naszym przypadku zakładamy stałe czasy trwania stanów ON/OFF równe, odpowiednio, _t<sub>on</sub>_ i _t<sub>off</sub>_, oraz stałą przepływność pakietową w stanie ON. Wtedy, z perspektywy zewnętrznego obserwatora współczynnik wariancji obserwowanej chwilowej przepływności pakietowej dla takiego strumienia jest określony wzorem (warto to samodzielnie sprawdzić):
+W naszym przypadku zakładamy stałe czasy trwania stanów ON/OFF równe, odpowiednio, _t<sub>on</sub>_ i _t<sub>off</sub>_, oraz stałą przepływność pakietową w stanie ON. Wtedy, z perspektywy zewnętrznego obserwatora, współczynnik wariancji obserwowanej chwilowej przepływności pakietowej dla takiego strumienia jest określony wzorem (warto to samodzielnie sprawdzić):
 
 $$
 CV = \frac{\sqrt{t_{off} \cdot (t_{on} + t_{off})}}{t_{on}}
