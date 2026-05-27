@@ -21,7 +21,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
    1. [Ustalenie właściwego punktu pracy sieci](#ustalenie-właściwego-punktu-pracy-sieci)
    2. [Ćwiczenie właściwe](#ćwiczenie-właściwe)
       1. [Parametry: ustawienia](#parametry-ustawienia)
-      2. [Seria pomiarów](#seria-pomiarów)
+      2. [Seria pomiarowa](#seria-pomiarowa)
    3. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
 5. [DODATEK: optymalizacja wydajnościowa pomiarów](#dodatek-optymalizacja-wydajnościowa-pomiarów)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
@@ -236,6 +236,8 @@ Average loss-burst size  =      1.000000 pkt
 
 To główny etap realizacji laboratorium.
 
+### Struktura: serie pomiarowe, punktowe serie pomiarowe, pomiary elementarne
+
 Zgodnie z wcześniejszym komentarzem, etap ten obejmuje kilka _serii pomiarów_ sieci, a każda z nich dotyczy określonego typu (innej charakterystyki) strumienia ruchu pakietowego. W podstawowej wersji laboratorium badamy trzy typy strumieni: strumień _constant packet rate_ (parametr definiujący w komendzie ITGSend `-C`), strumień Poissona (parametr definiujący w komendzie ITGSend `-P`) oraz strumień ON/OFF (parametr definiujący w komendzie ITGSend `-B` umieszczony na końcu komendy). Ostatecznym wynikiem jednej _serii pomiarów_ jest - obrazowo to ujmując - wykres (lub wykresy) przedstawiający eksperymentalnie wyznaczony przebieg opóźnienia i straty pakietów w funkcji intensywności napływu pakietów dla określonego typu strumienia ruchu pakietowego. Wyniki końcowe wszystkich _serii pomiarów_ podlegają analizie przez zespół laboratoryjny i na tej podstawie formułowane są wnioski końcowe.
 
 Każda _seria pomiarów_ obejmuje pewną liczbę _punktowych serii pomiarowych_, gdzie każda punktowa seria pomiarowa służy do oszacowania wartości interesujących nas metryk (opóźnienia i straty pakietów) dla <u>zadanej</u> intensywności napływu pakietów. Zestaw wielu punktowych serii pomiarowych (każda dla innej intensywności napływu pakietów) pozwala wykreślić graficzną zależność naszych metryk w funkcji intensywności napływu pakietów. Punktowa seria pomiarowa obejmuje natomiast szereg (np. 10) _pomiarów elementarnych_ (wszystkie przeprowadzone dla ustalonych parametrów strumienia), których uśrednione wyniki stanowią końcowy rezultat danej _punktowej serii pomiarowej_.
@@ -260,7 +262,7 @@ $$
 
 Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.618 \cdot t_{off}$, współczynnik wariancji obserwowanej chwilowej przepływności pakietowej przyjmuje wartość 1. Spodziewamy się, że dla źródeł ON/OFF warto skalować nasz pomiar z czasami _t<sub>on</sub>_ proporcjonalnie krótszymi względem _t<sub>off</sub>_ niż w tej zależności (czyli o wartościach współczynnika proporcjonalności względem _t<sub>off</sub>_ poniżej 1.618).
 
-### Seria pomiarów
+### Seria pomiarowa
 
 Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-ustawienia) serię pomiarów organizujemy następująco:
 
