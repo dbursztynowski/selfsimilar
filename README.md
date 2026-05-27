@@ -181,13 +181,13 @@ Ogólny tok postępowania obejmuje
 
 ## Ustalenie właściwego punktu pracy sieci
 
-Na wstępie nleży ustalić ogólny punkt pracy sieci dla swojego środowiska. Definiują go następujące parametry:
+Na wstępie należy ustalić ogólny punkt pracy sieci dla swojego środowiska. Można wprawdzie wykorzystać domyślny punkt pracy wynikający z ustawień w skrypcie `lbr.sh`, jednak został od dostosowany do konkretnego środowiska i w przypadku innych platform sprzętowych może wymagać korekty. Definiują go następujące atrybuty:
 
 * przepływność łącza `s1-h2`
 * rozmiar bufora (w założeniu nadawczego) dla interfejsu `s1-h2`; na tym interfejsie będzie koncentrować się ruch w kierunku hosta `h2` i tutaj pakiety będą doświadczać większych opóźnień i odrzucania (w naszym skrypcie pozostałe interfejsy są wymiarowane na "maksa", aby nie wpływały na wyniki pomiarów)
 * rozmiar pakietu: przyjętą w skrypcie `lbr.sh` wartość 1200 bajtów można uznać za właściwą i korygować tylko w uzasadnionych przypadkach
 
-Właściwą przepływność łącza `s1-h2` i rozmiar bufora dla interfejsu `s1-h2` ustalamy następująco.
+Właściwą przepływność łącza `s1-h2` i rozmiar bufora dla interfejsu `s1-h2` ustalamy zgodnie z poniższym opisem.
 
 W skrypcie `lbr.sh` parametry te są konfigurowane w linii 187 z użyciem narzędzia `tc` (manual jest dostępny [tutaj](https://man7.org/linux/man-pages/man8/tc.8.html)). W naszym skrypcie komenda ta wygląda następująco:
 
