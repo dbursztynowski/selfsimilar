@@ -22,7 +22,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
    2. [Ćwiczenie właściwe](#ćwiczenie-właściwe)
       1. [Struktura: serie pomiarowe, punktowe serie pomiarowe, pomiary elementarne](#struktura-serie-pomiarowe-punktowe-serie-pomiarowe-pomiary-elementarne)
       2. [Parametry: ustawienia](#parametry-ustawienia)
-      3. [Seria pomiarowa](#seria-pomiarowa)
+      3. [Seria pomiarowa i punktowa seria pomiarowa](#seria-pomiarowa-i-punktowa-seria-pomiarowa)
    4. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
 5. [DODATEK: optymalizacja wydajnościowa pomiarów](#dodatek-optymalizacja-wydajnościowa-pomiarów)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
@@ -263,7 +263,7 @@ $$
 
 Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.618 \cdot t_{off}$, współczynnik wariancji obserwowanej chwilowej przepływności pakietowej przyjmuje wartość 1. Spodziewamy się, że dla źródeł ON/OFF warto skalować nasz pomiar z czasami _t<sub>on</sub>_ proporcjonalnie krótszymi względem _t<sub>off</sub>_ niż w tej zależności (czyli o wartościach współczynnika proporcjonalności względem _t<sub>off</sub>_ poniżej 1.618).
 
-### Seria pomiarowa
+### Seria pomiarowa i punktowa seria pomiarowa
 
 Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-ustawienia) serię pomiarów organizujemy następująco:
 
