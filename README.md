@@ -3,7 +3,7 @@
 Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów (dokładniej, zmian intensywności strumienia pakietów) wychodzących przez interfejs urządzenia przełączającego na opóźnienie i straty pakietów na tym interfejsie. Celem ćwiczenia jest ugruntowanie wiedzy dotyczącej zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk.
 
 > [!Note]
-> Wyjaśnienie: w podstawowej wersji laboratorium nie generujemy ruchu samopodobnego (self-similar czy long-range dependent) w ścisłym rozumieniu, a jedynie ruch ON/OFF o współczynniku wariancji większym od 1. Zainteresowani użytkownicy mogą jednak w ramach prac własnych samodzielnie skonfigurować stronę nadawczą narzędzia D-ITG w celu emulowania strumieni bardziej zbliżonych do samopodobnych. W tym celu można użyć np. rozkładu Weibull'a dla czasów trwania stanów ON/OFF żródeł binarnych czy rozkłądu czasu między pakietami w stanie aktywnym źródła.
+> Wyjaśnienie: w podstawowej wersji laboratorium nie generujemy ruchu samopodobnego (self-similar czy long-range dependent) w ścisłym rozumieniu, a jedynie ruch ON/OFF o współczynniku wariancji większym od 1. Zainteresowani użytkownicy mogą jednak w ramach prac własnych samodzielnie skonfigurować stronę nadawczą narzędzia D-ITG w celu emulowania strumieni bardziej zbliżonych do samopodobnych. W tym celu można użyć np. rozkładu Weibull'a dla generowania czasów trwania stanów ON/OFF źródeł binarnych czy czasu między kolejnymi pakietami w stanie aktywnym źródła ruchu.
 
 # Spis treści
 
