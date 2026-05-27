@@ -1,6 +1,6 @@
 # Co tutaj mamy
 
-$ (\mbox{(Total\_packets} + \mbox{Packets\_dropped}) / 1000 $
+$ (\mbox{Total\_packets} + \mbox{Packets\_dropped}) / 1000 $
 
 Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów (dokładniej, zmian intensywności strumienia pakietów) wychodzących przez interfejs urządzenia przełączającego na opóźnienie i straty pakietów na tym interfejsie. Celem ćwiczenia jest ugruntowanie wiedzy dotyczącej zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk.
 
