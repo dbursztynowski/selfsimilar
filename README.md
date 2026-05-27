@@ -297,4 +297,4 @@ Moduł ten jest uruchamiany z domyślnym dla Linuksa priorytetem procesu (parame
 
   ## Moduł nadawczy `ITGSend`
 
-Moduł nadawczy jest uruchamiany z możliwie wysokim priorytetem procesu (parametr `chrt --fifo 1` w linii komendy - por. skrypt `lbr.sh`). Dodatkowo, zgodnie z podanym wcześniej opisem (i komentarzem w manualu D-ITG) dotyczącym opcji `-j 1`, można zrezygnować z generowania logów po stronie nadawczej (w naszej komendzie uruchamiajacej nadawcę `ITGSend` wystarczy usunąć opcję `-l sender.log`).
+Moduł nadawczy jest uruchamiany z możliwie wysokim priorytetem procesu (parametr `chrt --fifo 1` w linii komendy - por. skrypt `lbr.sh`). Dodatkowo, zgodnie z podanym wcześniej opisem (i komentarzem w manualu D-ITG) dotyczącym opcji `-j 1`, można zrezygnować z generowania logów po stronie nadawczej (w naszej komendzie uruchamiającej nadawcę `ITGSend` wystarczy usunąć opcję `-l sender.log`).
