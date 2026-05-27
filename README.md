@@ -85,14 +85,14 @@ Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie
 
 # Pomiar elementarny (_przebieg_)
 
+> [!Note]
+> Zaleca się, aby najlepiej podczas lektury niniejszej sekcji, a koniecznie przed przystąpieniem do lektury sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania), zespół przeprowadził rozpoznawczą serię eksperymentów z narzędziem D-ITG i z wykorzystaniem naszego środowiska sieciowego (tworzone jest skryptem `lbr.sh` opisanym poniżej). Nauki tu zdobyte ułatwią pracę z pozostałą częścią niniejszego dokumentu.
+
   ## Sekwencja działań 
 
-Obsługa _elementarnego pomiaru_ (jednego przebiegu pomiarowego) jest dość prosta. Środowisko sieciowe dla naszego pomiaru jest tworzone z wykorzystaniem skryptu powłoki _bash_ o nazwie `lbr.sh`.
+Obsługa _elementarnego pomiaru_ (jednego przebiegu pomiarowego) jest dość prosta.
 
-> [!Note]
-> Zaleca się, aby najlepiej podczas lektury niniejszej sekcji, a koniecznie przed przystąpieniem do lektury sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania), zespół przeprowadził rozpoznawczą serię eksperymentów z narzędziem D-ITG i z wykorzystaniem naszego środowiska sieciowego (tworzone przez `lbr.sh`). Nauki tu zdobyte ułatwią pracę z resztą niniejszego dokumentu.
-
-Skrypt `lbr.sh` zawiera szereg komentarzy wyjaśniających istotne dla nas kwestie szczegółowe. Komentarze te bezpośrednio sąsiadują z odpowiednimi komendami zawierającymi, a więc są możliwie dobrze skorelowane z warstwą "wykonawczą" skryptu. Dlatego w niniejszym dokumencie zadowalamy się opisem ogólnym, po techniczne detale odsyłając czytelników do samego skryptu.
+Środowisko sieciowe dla naszego pomiaru jest tworzone z wykorzystaniem skryptu powłoki _bash_ o nazwie `lbr.sh`. Skrypt ten zawiera szereg komentarzy wyjaśniających istotne dla nas kwestie szczegółowe. Komentarze te bezpośrednio sąsiadują z odpowiednimi komendami zawierającymi, a więc są możliwie dobrze skorelowane z warstwą "wykonawczą" skryptu. Dlatego w niniejszym dokumencie zadowalamy się opisem ogólnym, po techniczne detale odsyłając czytelników do samego skryptu.
 
 Po wywołaniu skryptu komendą `sudo ./lbr.sh` tworzona jest sieć o topologii zilustrowanej wcześniej, a w hoście `h2` (w przestrzeni nazw sieciowych `h2`) uruchamiany jest odbiornik aplikacji D-ITG o nazwie `ITGRecv`. Odbiornik ten, na domyślnym porcie D-ITG (i na wszystkich interfejsach hosta `h2`), nasłuchuje nadchodzących pakietów generowanych przez stronę nadawczą `ITGSend`. W ramach tego skryptu nadajnik `ITGSend` NIE jest jednak uruchamiany. Skrypt `lbr.sh` wykonujemy tylko raz, na samym początku ćwiczenia.
 
