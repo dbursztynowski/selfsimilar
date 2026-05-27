@@ -23,7 +23,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
       1. [Struktura: serie pomiarowe, punktowe serie pomiarowe, pomiary elementarne](#struktura-serie-pomiarowe-punktowe-serie-pomiarowe-pomiary-elementarne)
       2. [Parametry: ustawienia](#parametry-ustawienia)
       3. [Seria pomiarowa i punktowa seria pomiarowa](#seria-pomiarowa-i-punktowa-seria-pomiarowa)
-   4. [Raport: wyniki i wnioski](#raport-wyniki-i-wnioski)
+   4. [Raport: postać wyników i wnioski](#raport-postać-wyników-i-wnioski)
 5. [DODATEK: optymalizacja wydajnościowa pomiarów](#dodatek-optymalizacja-wydajnościowa-pomiarów)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
    2. [Moduł odbiorczy ITGRecv](#moduł-odbiorczy-itgrecv)
@@ -276,7 +276,7 @@ Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-ustawienia) serię po
 * Po zrealizowaniu wszystkich _punktowych serii pomiarowych_ dla danego typu strumienia pakietów sporządzamy odpowiednie wykresy (dla strat pakietów i dla opóźnienia). Tym kończymy daną punktową serię pomiarową. Ważne jest, aby każda ze średniówek opóźnienia i strat pakietów znalazła się w punkcie o współrzędnej na osi odciętych równej wartości _obciążenia zmierzonego_, a więc wartości średniej wyrażenia $` (\mbox{Total\_packets} + \mbox{Packets\_dropped}) / 1000 `$ z danej punktowej serii pomiarowej (obciążenie odniesienia zwykle będzie leżeć w trochę innym miejscu i to nas nie martwi).
 * Następnie albo przechodzimy do realizacji _serii pomiarowej_ dla kolejnego niezbadanego jeszcze typu strumienia, albo kończymy pomiary i przechodzimy do analizy wyników oraz sporządzania wniosków.
 
-## Raport: wyniki i wnioski
+## Raport: postać wyników i wnioski
 
 W raporcie należy przedstawić w formie graficznej charakterystryki opóźnieniowe i strat pakietów (po uśrednieniu z pomiarów elementarnych) dla poszczególnych (trzech) badanych rodzajów ruchu. Charakterystyka powinna przedstawiać zależność (uśrednionej) wartości danej metryki (opóźnienie, strata pakietów) w funkcji <u>obciążenia zmierzonego</u> (czxyli średniówki dla faktycznie uzuskanej intensywności generowania pakietów przez `ITGSend`).
 
