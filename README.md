@@ -256,7 +256,7 @@ W następnych dwóch podsekcjach przedstawiamy, kolejno, zasady parametryzacji p
 Na poniższym rysunku zebrano wprowadzone w tekście pojęcia w celu ułatwienia ich poprawnej interpretacji.
 
 <p align="center">
-<img src="/figures/sesja-pomiarowa.jpg" alt="Sesja pomiarowa" width="600" style="display: block; margin: 0 auto" />
+<img src="/images/sesja-pomiarowa.jpg" alt="Sesja pomiarowa" width="600" style="display: block; margin: 0 auto" />
 </p>
 
 ### Parametry: ustawienia
