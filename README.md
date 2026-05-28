@@ -68,7 +68,7 @@ Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w lin
 
 W ramach przedmiotu TESIN studenci otrzymują kompletny obraz maszyny wirtualnej dla nadzorcy VirtualBox z zainstalowanym systemem operacyjnym Ubuntu 24.04 Desktop i dodatkami VBoxGuestAdditions, skonfigurowanej z kompletem wymaganych artefaktów (zainstalowany D-ITG, dostępne wymagane skrypty _bash_ do tworzenia i do usuwania sieci). Obraz ten - o nazwie `tesin` - jest dostępny w naszym Teams. Artefakty są dostępne w maszynie wirtualnej na koncie użytkownika `student` w katalogu `~/Labs/traffic`.
 
-Obraz maszyny `tesin` nie jest mały i wygodniejsze może być zainstalowanie narzędzia D-ITG na maszynie dotąd używanej w ramach przedmiotu i pobranie niezbędnych skryptów do laboratorium z katalogu `skrypty` dostępnego w niniejszym repozytorium. W celu zainstalowania D-ITG wystarczy wykonać:
+Obraz maszyny `tesin` nie jest mały i wygodniejsze może być zainstalowanie narzędzia D-ITG na maszynie dotąd używanej w ramach przedmiotu oraz pobranie niezbędnych skryptów do laboratorium z katalogu `skrypty` dostępnego w niniejszym repozytorium. W celu zainstalowania D-ITG wystarczy wykonać:
 
 ```
 $ sudo apt-get update
