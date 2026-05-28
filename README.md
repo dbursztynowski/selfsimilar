@@ -64,11 +64,7 @@ W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h
 
 Niniejszy dokument jest podstawową instrukcją do laboratorium. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik ten należy traktować jak integralną część instrukcji o statusie Dodatku.
 
-Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej.
-
-W ramach przedmiotu TESIN studenci otrzymują kompletny obraz maszyny wirtualnej dla nadzorcy VirtualBox z zainstalowanym systemem operacyjnym Ubuntu 24.04 Desktop i dodatkami VBoxGuestAdditions, skonfigurowanej z kompletem wymaganych artefaktów (zainstalowany D-ITG, dostępne wymagane skrypty _bash_ do tworzenia i do usuwania sieci). Obraz ten - o nazwie `tesin` - jest dostępny w naszym Teams. Artefakty są dostępne w maszynie wirtualnej na koncie użytkownika `student` w katalogu `~/Labs/traffic`.
-
-Obraz maszyny `tesin` nie jest mały i wygodniejsze może być zainstalowanie narzędzia D-ITG na maszynie dotąd używanej w ramach przedmiotu oraz pobranie niezbędnych skryptów do laboratorium z katalogu `skrypty` dostępnego w niniejszym repozytorium. W celu zainstalowania D-ITG wystarczy wykonać:
+Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. W ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu. Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG wystarczy wykonać:
 
 ```
 $ sudo apt-get update
