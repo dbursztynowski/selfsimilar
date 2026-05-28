@@ -218,7 +218,8 @@ Kończymy poszukiwania kiedy uznamy, że nasze podane powyżej (i tak dość mi�
 ---
 <i>Uwaga DB: log został uzyskany dla łącza o nastawach rate 1.2mbit limit 10 oraz komendy generatora
 sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 150 -t 15000 -j 1 -l sender.log -x receiver.log
-Jak widać, teoretycznie powinno zostać wygenerowanych 2250 pakietów, a faktycznie wygenerowano ich 2071. Taka rozbieżność jest naszym zdaniem akceptowalna - zgodnie z wcześniejszą uwagą sieć można byłoby nawet jeszcze trochę "podkręcić".</i>
+Jak widać, teoretycznie powinno zostać wygenerowanych 2250 pakietów, a faktycznie wygenerowano ich 2071. Taka rozbieżność jest
+naszym zdaniem akceptowalna - zgodnie z wcześniejszą uwagą sieć można byłoby nawet jeszcze trochę "podkręcić".</i>
 ---
 Flow number: 1
 From 10.0.0.1:46291
