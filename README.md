@@ -21,7 +21,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
    2. [Ćwiczenie właściwe](#ćwiczenie-właściwe)
       1. [Struktura: serie pomiarowe, serie elementarne, pomiary elementarne](#struktura-serie-pomiarowe-serie-elementarne-pomiary-elementarne)
       2. [Parametry: ustawienia](#parametry-ustawienia)
-      3. [Seria pomiarowa i seria elementarna](#seria-pomiarowa-i-seria elementarna)
+      3. [Seria pomiarowa i seria elementarna](#seria-pomiarowa-i-seria-elementarna)
    4. [Raport: postać wyników i wnioski](#raport-postać-wyników-i-wnioski)
 5. [DODATEK: optymalizacja wydajnościowa pomiarów](#dodatek-optymalizacja-wydajnościowa-pomiarów)
    1. [Maszyna goszcząca i maszyna wirtualna](#maszyna-goszcząca-i-maszyna-wirtualna)
