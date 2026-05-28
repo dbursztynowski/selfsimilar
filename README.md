@@ -80,7 +80,7 @@ Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie
 > Za realizację dodatkowego testu przy założeniu źródła o rozkładzie Weibull'a dla odstępu między kolejnymi generowanymi pakietami **zespołowi będzie przysługiwać bonus w wysokości 20%** nominalnego _maksa_ za ćwiczenie.
 
 > [!Note]
-> Ze względu na uwarunkowania środowiska laboratoryjnego oraz rozwiązania implementacyjne generatora D-ITG poszczególne przebiegi pomiarowe (`pomiary elementarne`) przeprowadzane dla danego strumenia ruchu (w rozwinięciu: dla tego samego zbioru wartości parametrów opisujących zmienność generowanego strumienia ruchu) dają różne wyniki. Dla danego zbioru parametrów wymagane jest więc uśrednienie wyników zebranych co najmniej z kilku przebiegów (pomiarów elementarnych). Dotychczasowe doświadczenia wskazują, że 10 prób pozwala uzyskać zadowalającą dokładność średniówki.
+> Ze względu na uwarunkowania środowiska laboratoryjnego oraz rozwiązania implementacyjne generatora D-ITG poszczególne przebiegi pomiarowe (`pomiary elementarne`) przeprowadzane dla danego strumenia ruchu (precyzyjniej: dla zadanego zbioru wartości parametrów opisujących zmienność generowanego strumienia ruchu) dają różne wyniki. Dla danego zbioru parametrów wymagane jest więc uśrednienie wyników zebranych co najmniej z kilku przebiegów (pomiarów elementarnych). Dotychczasowe doświadczenia wskazują, że 10 prób pozwala uzyskać zadowalającą dokładność średniówki.
 
 # Pomiar elementarny (_przebieg_)
 
