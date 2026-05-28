@@ -2,8 +2,7 @@
 
 Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów (dokładniej, chwilowych zmian intensywności napływu pakietów) obciążającego interfejs przełącznika na opóźnienie i straty pakietów na tym interfejsie. Celem ćwiczenia jest ugruntowanie wiedzy dotyczącej zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk.
 
-> [!Note]
-> Wyjaśnienie: w podstawowej wersji laboratorium nie generujemy ruchu samopodobnego (self-similar czy long-range dependent) w ścisłym rozumieniu, a jedynie ruch ON/OFF o współczynniku wariancji większym od 1. Zainteresowani użytkownicy mogą jednak w ramach prac własnych samodzielnie skonfigurować stronę nadawczą narzędzia D-ITG w celu emulowania strumieni bardziej zbliżonych do samopodobnych. W tym celu można użyć np. rozkładu Weibull'a w celu generowania czasu trwania stanów ON/OFF dla binarnych źródeł ruchu czy czasu między kolejnymi pakietami w stanie aktywnym źródła.
+> :memo: **Wyjaśnienie**: W podstawowej wersji laboratorium nie generujemy ruchu samopodobnego (self-similar czy long-range dependent) w ścisłym rozumieniu, a jedynie ruch ON/OFF o współczynniku wariancji większym od 1. Zainteresowani użytkownicy mogą jednak w ramach prac własnych samodzielnie skonfigurować stronę nadawczą narzędzia D-ITG w celu emulowania strumieni bardziej zbliżonych do samopodobnych. W tym celu można użyć np. rozkładu Weibull'a w celu generowania czasu trwania stanów ON/OFF dla binarnych źródeł ruchu czy czasu między kolejnymi pakietami w stanie aktywnym źródła.
 
 # Spis treści
 
@@ -255,6 +254,7 @@ W następnych dwóch podsekcjach przedstawiamy, kolejno, zasady parametryzacji p
 
 Na poniższym rysunku zebrano wprowadzone w tekście pojęcia w celu ułatwienia ich poprawnej interpretacji.
 
+#### Struktura sesji pomiarowej
 <p align="center">
 <img src="images/seria-pomiarowa.jpg" alt="Sesja pomiarowa" width="700" style="display: block; margin: 0 auto" />
 </p>
@@ -287,7 +287,7 @@ Przyjmując ustalenia z [poprzedniej podsekcji](#parametry-ustawienia) serię po
 * Teraz, dla każdego obciążenia odniesienia, przeprowadzamy właściwą _punktową serię pomiarową_:
   * dla wartości `X`, wyznaczonej w poprzednim kroku dla tego obciążenia odniesienia, realizujemy szereg (np. 10) [pomiarów elementarnych](#pomiar-elementarny-przebieg), po każdym z nich zapisując jego wyniki jako wartości następujących metryk: **(1)** liczba pakietów faktycznie wygenerowanych równa $` (\mbox{Total\_packets} + \mbox{Packets\_dropped}) / 1000 `$, **(1)** strata pakietów jako wartość pola _Packets dropped_ w logu, **(1)** średnie opóźnienie pakietu jako wartość pola _Average delay_ w logu
   * po wykonaniu wszystkich pomiarów elementarnych w ramach punktowej serii pomiarowej uśredniamy wartość każdej z wymienionych metryk.
-* Po zrealizowaniu wszystkich _punktowych serii pomiarowych_ dla danego typu strumienia pakietów sporządzamy odpowiednie wykresy (dla strat pakietów i dla opóźnienia). Tym kończymy bieżącą _serię pomiarową_. Ważne jest, aby każda ze średniówek opóźnienia i strat pakietów znalazła się w punkcie o współrzędnej na osi odciętych równej wartości _obciążenia zmierzonego_, a więc wartości średniej wyrażenia $` (\mbox{Total\_packets} + \mbox{Packets\_dropped}) / 1000 `$ z danej punktowej serii pomiarowej (obciążenie odniesienia zwykle będzie leżeć w trochę innym miejscu i to nas nie martwi). Dobrze to widać na przedstawionym wcześniej [rysunku](images/seria-pomiarowa.jpg).
+* Po zrealizowaniu wszystkich _punktowych serii pomiarowych_ dla danego typu strumienia pakietów sporządzamy odpowiednie wykresy (dla strat pakietów i dla opóźnienia). Tym kończymy bieżącą _serię pomiarową_. Ważne jest, aby każda ze średniówek opóźnienia i strat pakietów znalazła się w punkcie o współrzędnej na osi odciętych równej wartości _obciążenia zmierzonego_, a więc wartości średniej wyrażenia $` (\mbox{Total\_packets} + \mbox{Packets\_dropped}) / 1000 `$ z danej punktowej serii pomiarowej (obciążenie odniesienia zwykle będzie leżeć w trochę innym miejscu i to nas nie martwi). Dobrze to widać na przedstawionym wcześniej [rysunku](#struktura-sesji-pomiarowej).
 * Następnie albo przechodzimy do realizacji _serii pomiarowej_ dla kolejnego niezbadanego jeszcze typu strumienia, albo kończymy pomiary i przechodzimy do analizy wyników oraz sporządzania wniosków.
 
 ## Raport: postać wyników i wnioski
