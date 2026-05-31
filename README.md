@@ -32,10 +32,20 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
 
   ## Sieć
 
-> [!Note]
-> W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia ćwiczenie powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego "ilościowo-zasobowa" konfiguracja naszego środowiska (w szczególności rozmiar bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w urządzeniach rzeczywistej sieci. Ważne jest jednak, że pomimo dużych ograniczeń i przyjętych uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
+W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia ćwiczenie powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego "ilościowo-zasobowa" konfiguracja naszego środowiska (w szczególności rozmiar bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w urządzeniach rzeczywistej sieci. Ważne jest jednak, że pomimo dużych ograniczeń i przyjętych uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
 
-Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter przenoszący ruch pakietowy pomiędzy hostami. Jako generator ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). Składa się nań kilka modułów-aplikacji służących różnym celom. W laboratorium używamy (właściwego) generatora ruchu `ITGSend`, odbiornika ruchu `ITGRecv` oraz dekodera logów `ITGDec`.
+> [!Note]
+> Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów implementacyjnych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Ważniejsze z nich to:
+> * **wariant A**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w podsystemmie WSL (Windows Subsystem for Linux)
+> * **wariant B**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w klasycznej maszynie wirtualnej, np. pod Hyper-V/VirtualBox/VMWare...
+> * **wariant C**: maszyna poszcząca pod Linuksem; w tym przypadku eksperyment wykonywać wprost w maszynie goszczącej
+> * **wariant D**: dwie maszyny fizyczne pod Linuksem w sieci lokalnej
+>
+> Z punktu widzenia komfortu pracy preferowane są warianty A, C i D (D w przypadku szczególnie zainteresowanych osób). Wariant B został sprawdzony dla Ubuntu u Debiana pod VirtualBox i należy go uznać za "ratunkowy". Potencjalnie może on pełnić taką rolę w przypadku, gdy zespół ma dostęp tylko do maszyn z systemem MacOS. Wprawdzie pod MacOS istnieją możliwości konfigurowania podobnych urządzeń sieciowych co w Links, ale takiego wariantu nie testowano w ramach opracowywania laboratorium. Ponadto, choć raczej nie będzie to ograniczenie aktywne w naszym ćwiczeniu, realizując wariant D należy pamiętać o ograniczonej przez sprzęt (lokalne przełączniki/rutery) przepustowości sieci między hostami.
+>
+>Powyższe warianty są do siebe podobne architektonicznie, z zastrzeżeniem, że przypadek D w pewnej mierze odstaje od pozostałych (; przypadek D skomentujemy dalej). Ze względu na podobieństwa między wariantami, poniższa instrukcja zasadnczo jest wspólna dla nich. Sporządzona została opracowując i testując wariant **B**. To wariant "najtrudniejszy* z uwagi na wydajnościowe ograniczenia maszyn wirtualnych, a wyjaśnienie związanych z tym kwestii zajęło sporo miejsca. W środowisku takim obserwujemy bowiem spory rozrzut wyników, a to wymaga zarówno dużej uważności w doborze punktu pracy całego eksperymentu, jak i dodatkowych zabiegów przy obróbce wyników. W pozostałych przypadkach te negatywne efekty zaznaczają się w znacznie mniejszym stopniu (choć nadal warto mieć świadowość ich występowania).
+
+Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter przenoszący ruch pakietowy pomiędzy hostami. Jako generator ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). Składa się nań kilka modułów-aplikacji służących różnym celom. W laboratorium używamy (właściwego) generatora ruchu `ITGSend`, odbiornika ruchu `ITGRecv` oraz dekodera logów `ITGDec`.
 
 Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `hi-s1` oraz `s1-hi` (i=1,2) to interfejsy należące do linuksowych urządzeń typu _veth pair_ (ang. _virtual eth pair_). Pary te reprezentują "kable" ethernetowe łączące poszczególne urządzenia (więcej o parach veth, a także o `linux bridge` znajdziemy w dokumentacji Linuksa oraz w innych licznych źródłach dostępnych w Internecie).
 
@@ -59,6 +69,8 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
 ```
 
 W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości pomiarów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.
+
+> :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 sa fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w któej realizyjemy eksperyment. Zakłądamy, że w takim przypadku nie memy możliwości zwobodnego konfigurowania interfejsu s1-h2. Zamiast tego w wariancie D należy konfigurować interfejs h1-s1 (jego odpowiednik - to interfejs fizyczne hosta h1, o nazwie w stylu eth0 czy enp0s25). Składniowo, komendy konfiguracyjne są identyczne jak w pozostałych przypadkach.
 
   ## Artefakty
 
@@ -106,7 +118,7 @@ Po wykonaniu skryptu `lbr.sh` można przystąpić do realizacji kolejnych pomiar
 
   * W **odrębnym oknie terminala** uruchomić stronę nadawczą `ITGSend`, skonfigurowaną z odpowiednimi parametrami w linii komendy (m.inn. adres strony odbiorczej, charakterystyka ruchu, czas trwania symulacji, nazwy logów nadawczego i odbiorczego i inn.). Moduł `ITGSend` uruchamiamy ręcznie w przestrzeni nazw `h1`, a przykładowa komenda ma formę (więcej o detalach parametryzacji komendy napisano w kolejnej podsekcji):
 
-    `sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 200 -t 15000 -j 1 -l sender.log -x receiver.log -B E 100 W 10 100`
+    `sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 200 -t 15000 -j 1 -l sender.log -x receiver.log -B E 100 W 10 100`
 
   * Po zakończeniu przebiegu należy przejrzeć logi (w szczególności log odbiorczy) i zapisać interesujące nas wyniki w celu późniejszego ich uśrednienia. Wyświetlenie logu w czytelnej formie w oknie terminala uzyskujemy komendą `/usr/bin/ITGDec <log-filename>`, gdzie `<log-filename>` to nazwa pliku z logiem (wcześniej podana w komendzie startującej generator `ITGSend`).
 
@@ -148,7 +160,7 @@ Czasy trwania stanów ON i OFF mogą w ogólności być różnymi zmiennymi loso
 Komenda (wykorzystana w skrypcie `lbr.sh`), służąca do generowania strumieni ruchu tego rodzaju na nasze potrzeby (struktura naszej sieci itp.), ma zatem następującą formę:
 
 ```
-sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 200 -t 15000 -j 1 -l sender.log -x receiver.log -B <opis-czasu-ON> <opis-czasu-OFF>
+sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 200 -t 15000 -j 1 -l sender.log -x receiver.log -B <opis-czasu-ON> <opis-czasu-OFF>
 ```
 
 W naszym przypadku (tj. w naszym skrypcie `lbr.sh`) znaczenie poszczególnych fragmentów/pól jest następujące:
@@ -157,7 +169,7 @@ W naszym przypadku (tj. w naszym skrypcie `lbr.sh`) znaczenie poszczególnych fr
 
 `sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend` - uruchom w przestrzeni nazw sieciowych h1 (ip netns exec h1) proces aplikacji (/usr/bin/ITGSend) na możliwie wysokim priorytecie (chrt --fifo 1);
 
-`/usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 200 -t 15000` - uruchamiana aplikacja (nasz generator ITGSend) ma słać ruch na adres 10.0.0.2, stosowć protokół UDP (-T UDP), formować pakiety o stałej długości 1500 bajtów (-c 1200) z intensywnością napływu (tutaj w okresach ON, bo na końcu komendy występuje blok `-B`) równą 200 pakietów/sek (-C 200), całkowity czas trwania przebiegu ma wynosić 15000ms (czyli 15 sekund; -t 15000). Zapis `-C 200` odpowiada konkretnej charakterystyce strumienia w stanie ON (rozkład jednopunktowy) - w ogólnym przypadku może tu jednak wystąpić dowolny z rozkładów/zapisów określonych na stronie **13** manuala D-ITG (w naszym laboratorium zasadniczo posługujemy się tylko rozkładem jednopunktowym, chyba że zespół pokusi się o zadanie bonusowe z Weibull'em);
+`/usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 200 -t 15000` - uruchamiana aplikacja (nasz generator ITGSend) ma słać ruch na adres 10.0.0.2, stosowć protokół UDP (-T UDP), formować pakiety o stałej długości 1500 bajtów (-c 1250) z intensywnością napływu (tutaj w okresach ON, bo na końcu komendy występuje blok `-B`) równą 200 pakietów/sek (-C 200), całkowity czas trwania przebiegu ma wynosić 15000ms (czyli 15 sekund; -t 15000). Zapis `-C 200` odpowiada konkretnej charakterystyce strumienia w stanie ON (rozkład jednopunktowy) - w ogólnym przypadku może tu jednak wystąpić dowolny z rozkładów/zapisów określonych na stronie **13** manuala D-ITG (w naszym laboratorium zasadniczo posługujemy się tylko rozkładem jednopunktowym, chyba że zespół pokusi się o zadanie bonusowe z Weibull'em);
 
 `-j 1` - dodatkowo żądamy, aby nadajnik starał się wysyłać wszystkie teoretycznie przewidziane dla strumienia pakiety - aby utrzymać wynikającą z teorii przepływność pakietową. Za tą opcją może stać pewna słabość generatora, a trochę więcej na ten temat wyjaśniono w manualu na stronie **15**. Ostatecznie, związany z nią pewien implementacyjny detal generatora może być przyczyną obserwowanej w naszych pomiarach nie tylko niezgodności między oczekiwaną liczbą wygenerowanych pakietów a liczbą pakietów wygenerowanych faktycznie (np. dla rozkładu _constant packet rate_ (-C)), ale także zmiennej samej liczby pakietów faktycznie wygenerowanych w kolejnych przebiegach dla ustalonego strumienia ruchu. Rozbieżność ta rośnie wraz z założoną intensywnością napływu pakietów. W efekcie **wszelkie analizy i wnioski należy opierać na danych pochodzących z logów strony odbiornika `ITGRecv`**, a wyniki dla danego strumienia należy uśredniać z wielu (np. 10) przebiegów (iteracji). Logów nadajnika w ogóle można nie generować. **Rezygnacja z tworzenia logu nadajnika może być tym bardziej korzystna, że dodatkowo zaoszczędzi to czas procesora i nieco poprawi ogólną jakość wyników.**
 
@@ -169,7 +181,7 @@ W naszym przypadku (tj. w naszym skrypcie `lbr.sh`) znaczenie poszczególnych fr
 Przykładowo, konkretne wywołanie nadawcy może mieć formę:
 
 ```
-sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 200 -T 15000 -j 1 -l sender.log -x receiver.log -B C 500 C 1000
+sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 200 -T 15000 -j 1 -l sender.log -x receiver.log -B C 500 C 1000
 ```
 
 W powyższym przykładzie specyfikujemy strumień ON/OFF o stałym czasie aktywności (stan ON) 500 ms, stałym czasie nieaktywności (stan OFF) 1000 ms, szybkości transmisji w stanie ON równej 200 pakietów/sek i stałym rozmiarze pakietu 1500 bajtów (widać, że przy całkowitym czasie trwania strumienia równym 15 sekund wykona on dziesięć cykli ON/OFF, teoretycznie przesyłając łącznie 10 * 200 * 0.5 = 1000 pakietów ze średnią przepływnością równą 1000/15=66.7 pakietów/sek). Komentarz zamieszczony powyżej, dotyczący opcji `-j 1`, wskazuje na to, że rzeczywistości generator wyśle jednak mniej pakietów niż wynika z teorii.
@@ -197,7 +209,7 @@ Na wstępie należy ustalić ogólny punkt pracy sieci dla swojego środowiska. 
 
 * przepływność łącza `s1-h2`
 * rozmiar bufora (w założeniu nadawczego) dla interfejsu `s1-h2`; na tym interfejsie będzie koncentrować się ruch w kierunku hosta `h2` i tutaj pakiety będą doświadczać większych opóźnień oraz odrzucania (w naszym skrypcie pozostałe interfejsy są zwymiarowane na "maksa", tak aby nie wpływały one na wyniki pomiarów)
-* rozmiar pakietu: przyjętą w skrypcie `lbr.sh` wartość 1200 bajtów można uznać za właściwą i warto korygować tylko w uzasadnionych przypadkach
+* rozmiar pakietu: przyjętą w skrypcie `lbr.sh` wartość 1250 bajtów można uznać za właściwą i warto korygować tylko w uzasadnionych przypadkach (daje ona długość pakietu równą 10000 bitów i łatwo jest przeliczać przepływności ;-) )
 
 Właściwą przepływność łącza `s1-h2` i rozmiar bufora dla interfejsu `s1-h2` ustalamy zgodnie z poniższym opisem.
 
@@ -211,7 +223,7 @@ Konfiguruje ona przepływność łącza równą 1.2 Mbit/s oraz rozmiar bufora n
 W tym celu należy przeprowadzić pewną liczbę wstępnych [pomiarów elementarnych](#pomiar-elementarny-przebieg). Na tym etapie, metodą prób i błędów, należy zmieniać przepływność i rozmiar bufora (czyli wielokrotnie usuwać sieć i tworzyć nową jej wersję), a dla każdej nowej wersji sieci sprawdzać straty pakietów dla strumieni typu _constant packet rate_ (opcja `-C`) przy różnych wartościach `X` szybkości tramsmisji: opcja `-C X`. Wykorzystywana w tym celu komenda generatora `ITGSend` powinna mieć postać (zaczerpniętą zresztą ze skryptu `lbr.sh`) jak poniżej, z zastrzeżeniem, że pole oznaczone tu jako `X` to właśnie modyfikowana przez nas szybkość transmisji nadajnika w [pakiety/sek] i należy wstawić w to miejsce konkretną liczbę:
 
 ```
-sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C X -t 15000 -j 1 -l sender.log -x receiver.log
+sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C X -t 15000 -j 1 -l sender.log -x receiver.log
 ```
 
 Startujemy z parametrami łącza `s1-h2` w formie `rate 1.2mbit limit 10` i wartością `X` równą 100 (pakietów/sek). Starmy się podwyższać przepływność łącza i rozmiar bufora, a dla konkretnych nastaw dla łącza - podwyższać `X` tak, aby
