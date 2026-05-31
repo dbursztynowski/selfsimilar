@@ -193,6 +193,10 @@ tc qdisc add dev s1-h2 root netem rate 1.2mbit limit 10
 # uwaga: kolejna zmiana parametrow "z reki": uzyc "change" zamiast "add" w komendzie podanej powyzej
 # check current settings in other terminal
 # tc -s qdisc ls dev eth0
+# - delete current tc settings (reset to system default)
+#sudo tc qdisc del dev enp0s25 root
+# - as above, via checking systm file
+#cat /proc/sys/net/core/default_qdisc
 
 # --- Sprawdź drożność sieci
 ip netns exec h1 ping -c1 10.0.0.2
@@ -266,3 +270,20 @@ ip netns exec h2 /usr/bin/ITGRecv
 
 #/usr/bin/ITGDec <log-filename>
 #/usr/bin/ITGDec sender.log
+
+# Sprawdzenia, np. wg
+#https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/monitoring_and_managing_system_status_and_performance/tuning-the-network-performance_monitoring-and-managing-system-status-and-performance
+# weryfikacja liczby odrzucanych pakietów na interfejscie s1-h2
+# (do porównania z wynikiem: /usr/bin/ITGDec receiver.log)
+#tc -s qdisc ls dev eth0
+# do zarzadzania tc w trakcie pracy (zwlaszcza przy fizycznych interfejsach)
+# - delete current tc settings (reset to system default)
+#sudo tc qdisc del dev enp0s25 root
+# check current tc settings
+#tc -s qdisc show dev s1-h2
+# - as above, via checking systm file
+#cat /proc/sys/net/core/default_qdisc
+# podstawowe info i statyski transmisyjne interfejsu
+#tc -s qdisc ls dev eth0
+#ip -stats link show enp0s25
+
