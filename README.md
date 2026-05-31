@@ -35,7 +35,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
 W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia ćwiczenie powinno też być niskobudżetowe - realizowane z użyciem sprzętu powszechnego użytku. Dlatego "ilościowo-zasobowa" konfiguracja naszego środowiska (w szczególności rozmiar bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w urządzeniach rzeczywistej sieci. Ważne jest jednak, że pomimo dużych ograniczeń i przyjętych uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
 
 > [!Note]
-> Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów implementacyjnych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Ważniejsze z nich to:
+> Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów dn eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Ważniejsze z nich to:
 > * **wariant A**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w podsystemie WSL (Windows Subsystem for Linux)
 > * **wariant B**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w klasycznej maszynie wirtualnej, np. pod Hyper-V/VirtualBox/VMWare...
 > * **wariant C**: maszyna poszcząca pod Linuksem; w tym przypadku eksperyment wykonywać wprost w maszynie goszczącej
