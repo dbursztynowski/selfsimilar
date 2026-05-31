@@ -192,11 +192,12 @@ ip link set dev s1-h2 txqueuelen 50000  # w istocie wartosc standardowa, ale ...
 tc qdisc add dev s1-h2 root netem rate 1.2mbit limit 10
 # uwaga: kolejna zmiana parametrow "z reki": uzyc "change" zamiast "add" w komendzie podanej powyzej
 # check current settings in other terminal
+# - as above, via checking systm file
+#cat /proc/sys/net/core/default_qdisc
 # tc -s qdisc ls dev eth0
 # - delete current tc settings (reset to system default)
 #sudo tc qdisc del dev enp0s25 root
-# - as above, via checking systm file
-#cat /proc/sys/net/core/default_qdisc
+
 
 # --- Sprawdź drożność sieci
 ip netns exec h1 ping -c1 10.0.0.2
@@ -280,10 +281,9 @@ ip netns exec h2 /usr/bin/ITGRecv
 # - delete current tc settings (reset to system default)
 #sudo tc qdisc del dev enp0s25 root
 # check current tc settings
-#tc -s qdisc show dev s1-h2
+#tc qdisc show dev s1-h2
 # - as above, via checking systm file
 #cat /proc/sys/net/core/default_qdisc
-# podstawowe info i statyski transmisyjne interfejsu
+# podstawowe info o interfejsie i statystyki transmisyjne interfejsu
 #tc -s qdisc ls dev eth0
 #ip -stats link show enp0s25
-
