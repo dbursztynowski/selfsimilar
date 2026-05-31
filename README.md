@@ -36,14 +36,16 @@ W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka 
 
 > [!Note]
 > Środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów implementacyjnych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Ważniejsze z nich to:
-> * **wariant A**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w podsystemmie WSL (Windows Subsystem for Linux)
+> * **wariant A**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w podsystemie WSL (Windows Subsystem for Linux)
 > * **wariant B**: maszyna goszcząca pod Windows, gość Linuksowy uzyskiwany w klasycznej maszynie wirtualnej, np. pod Hyper-V/VirtualBox/VMWare...
 > * **wariant C**: maszyna poszcząca pod Linuksem; w tym przypadku eksperyment wykonywać wprost w maszynie goszczącej
 > * **wariant D**: dwie maszyny fizyczne pod Linuksem w sieci lokalnej
 >
 > Z punktu widzenia komfortu pracy preferowane są warianty A, C i D (D w przypadku szczególnie zainteresowanych osób). Wariant B został sprawdzony dla Ubuntu u Debiana pod VirtualBox i należy go uznać za "ratunkowy". Potencjalnie może on pełnić taką rolę w przypadku, gdy zespół ma dostęp tylko do maszyn z systemem MacOS. Wprawdzie pod MacOS istnieją możliwości konfigurowania podobnych urządzeń sieciowych co w Links, ale takiego wariantu nie testowano w ramach opracowywania laboratorium. Ponadto, choć raczej nie będzie to ograniczenie aktywne w naszym ćwiczeniu, realizując wariant D należy pamiętać o ograniczonej przez sprzęt (lokalne przełączniki/rutery) przepustowości sieci między hostami.
 >
->Powyższe warianty są do siebe podobne architektonicznie, z zastrzeżeniem, że przypadek D w pewnej mierze odstaje od pozostałych (; przypadek D skomentujemy dalej). Ze względu na podobieństwa między wariantami, poniższa instrukcja zasadnczo jest wspólna dla nich. Sporządzona została opracowując i testując wariant **B**. To wariant "najtrudniejszy* z uwagi na wydajnościowe ograniczenia maszyn wirtualnych, a wyjaśnienie związanych z tym kwestii zajęło sporo miejsca. W środowisku takim obserwujemy bowiem spory rozrzut wyników, a to wymaga zarówno dużej uważności w doborze punktu pracy całego eksperymentu, jak i dodatkowych zabiegów przy obróbce wyników. W pozostałych przypadkach te negatywne efekty zaznaczają się w znacznie mniejszym stopniu (choć nadal warto mieć świadowość ich występowania).
+> Powyższe warianty są do siebe podobne architektonicznie, z zastrzeżeniem, że przypadek D w pewnej mierze odstaje od pozostałych (; przypadek D skomentujemy dalej). Ze względu na podobieństwa między wariantami, poniższa instrukcja zasadnczo jest wspólna dla nich. Sporządzona została opracowując i testując wariant **B**. To wariant "najtrudniejszy* z uwagi na wydajnościowe ograniczenia maszyn wirtualnych, a wyjaśnienie związanych z tym kwestii zajęło sporo miejsca. W środowisku takim obserwujemy bowiem spory rozrzut wyników, a to wymaga zarówno dużej uważności w doborze punktu pracy całego eksperymentu, jak i dodatkowych zabiegów przy obróbce wyników. W pozostałych przypadkach te negatywne efekty zaznaczają się w znacznie mniejszym stopniu (choć nadal warto mieć świadowość ich występowania).
+
+> W nieniejszej instrukcji zakłada się, że zespół potrafi samodzielnie przygowować maszynę goszczącą i maszynę gościa (np. WSL) do przeprowadzenia eksperymentów.
 
 Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter przenoszący ruch pakietowy pomiędzy hostami. Jako generator ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). Składa się nań kilka modułów-aplikacji służących różnym celom. W laboratorium używamy (właściwego) generatora ruchu `ITGSend`, odbiornika ruchu `ITGRecv` oraz dekodera logów `ITGDec`.
 
@@ -74,16 +76,16 @@ W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h
 
   ## Artefakty
 
-Niniejszy dokument jest podstawową instrukcją do laboratorium. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik ten należy traktować jak integralną część instrukcji o statusie Dodatku.
+**Niniejszy dokument jest podstawową instrukcją do laboratorium**. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik ten należy traktować jak **integralną część** niniejszej instrukcji, o statusie Dodatku.
 
-Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. W ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu. Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG wystarczy wykonać:
+Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. Jak wspomniano, preferujemy warianty konfiguracyjne srodowiska A, C i D. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu. Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG wystarczy wykonać:
 
 ```
 $ sudo apt-get update
 $ sudo apt-get install d-itg
 ```
 
-> :warning: **Uwaga**: W przypadku wykorzystania innej dystrybucji Linuksa niż Debian/Ubuntu może być konieczne zbudowanie wersji binarnej D-ITG ze źródeł - wg opisu dostępnego [tutaj](https://github.com/jbucar/ditg/blob/master/INSTALL.).
+> :warning: **Uwaga**: W przypadku wykorzystania innej dystrybucji Linuksa niż Debian/Ubuntu może okazać się konieczne zbudowanie wersji binarnej D-ITG ze źródeł - wg opisu dostępnego [tutaj](https://github.com/jbucar/ditg/blob/master/INSTALL.).
 
 # Ogólna forma ćwiczenia
 
