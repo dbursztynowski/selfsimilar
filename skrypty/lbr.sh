@@ -57,12 +57,11 @@
 # sudo nice -n -19 /usr/bin/ITGRecv
 
 # --- Uruchomienie nadawcy z priorytetem 19 (wysoki)
-#sudo nice -n -19 /usr/bin/ITGSend -T UDP -a 10.0.0.2 -c 1200 -C 100 -t 20000 -l sender.log -x receiver.log
+#sudo nice -n -19 /usr/bin/ITGSend -T UDP -a 10.0.0.2 -c 1250 -C 100 -t 20000 -l sender.log -x receiver.log
 
 # odczytaj log po zakonczeniu przebiegu (wyjscie na terminal)
 #/usr/bin/ITGDec <log-filename>
 #/usr/bin/ITGDec sender.log
-
 
 #---------------------------------------------------------------
 #===================================
@@ -241,26 +240,26 @@ ip netns exec h2 /usr/bin/ITGRecv
 #   jednak dla kompletu podajemy tez wersje z "nice".
 
 # naplyw: costant packet rate
-#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log
-##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log
+#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log
+##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log
 
 # naplyw: proces Poissona
-#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -O 100 -t 15000 -j 1 -l sender.log -x receiver.log
-##sudo ip netns exec h1 nice -n -19  /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -O 100 -t 15000 -j 1 -l sender.log -x receiver.log
+#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -O 100 -t 15000 -j 1 -l sender.log -x receiver.log
+##sudo ip netns exec h1 nice -n -19  /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -O 100 -t 15000 -j 1 -l sender.log -x receiver.log
 
 # naplyw: proces o rozkladzie Weibulla (podane parametry 0.5, 50 teoretycznie odpowiadaja sredniej intensywnosci 100pak/sek)
-#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -W 0.5 50 -t 15000 -j 1 -l sender.log -x receiver.log
-##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -W 0.5 50 -t 15000 -j 1 -l sender.log -x receiver.log
+#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -W 0.5 50 -t 15000 -j 1 -l sender.log -x receiver.log
+##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -W 0.5 50 -t 15000 -j 1 -l sender.log -x receiver.log
 
 # naplyw: typ zrodla ON/OFF ze stalym czasem w stanie ON o wartosci 200 ms i stalym czasem w stanie OFF o wartosci 800 ms, i o stalej szybkosci
 #   nadawania w stanie ON rownej 100 pakietow/sek
-#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B C 200 C 800
-##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B C 200 C 800
+#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B C 200 C 800
+##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B C 200 C 800
 
 # naplyw: jeszcze bardziej nieregularny ruch typu ON/OFF z czasem ON o rozkladzie wykadniczym o sredniej 100ms i czasem OFF o rozkladzie Weibulla o
 #   sredniej 100*Gamma(1+1/10) ms, i o stalej szybkosci nadawania w stanie ON rownej 100 pakietow/sek
-#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B E 100 W 10 100
-##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1200 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B E 100 W 10 100
+#sudo ip netns exec h1 chrt --fifo 1 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B E 100 W 10 100
+##sudo ip netns exec h1  nice -n -19 /usr/bin/ITGSend -a 10.0.0.2 -T UDP -c 1250 -C 100 -t 15000 -j 1 -l sender.log -x receiver.log -B E 100 W 10 100
 
 #==============================================
 # Odczyt wynikow
