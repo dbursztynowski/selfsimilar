@@ -280,7 +280,7 @@ Każda _seria pomiarowa_ obejmuje pewną liczbę _serii elementarnych_, gdzie ka
 
 W następnych dwóch podsekcjach przedstawiamy, kolejno, zasady parametryzacji pomiarów oraz sposób realizacji jednej _serii pomiarowej_. Realizacja takiej serii dla każdego z interesujących nas typów strumienia ruchu pakietowego wypełnia "operacyjną" część laboratorium. Jest ona podstawą do analizy i sformułowania wniosków końcowych.
 
-Na poniższym rysunku zebrano wprowadzone w tekście pojęcia w celu ułatwienia ich poprawnej interpretacji.
+Na poniższym rysunku zebrano wprowadzone w tekście pojęcia w celu ułatwienia ich poprawnej interpretacji. Należy pamiętać o tym, że wymienione tu wartości parametru `X` oraz parametrów _obciążenie-odniesienia_ i _obciążenie-zmierzone_ pozostają względem siebie w relacjach _X >= max[obciążenie-odniesienia, obciążenie-zmierzone]_, _obciążenie-odniesienia <=> obciążenie zmierzone_.
 
 #### Struktura sesji pomiarowej
 <p align="center">
