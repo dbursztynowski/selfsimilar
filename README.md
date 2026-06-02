@@ -134,7 +134,7 @@ Po wykonaniu skryptu `lbr.sh` można przystąpić do realizacji kolejnych pomiar
 
   ### Podstawowe strumienie ruchu i przykłady użycia
 
-Jak już wspomniano, wykorzystujemy generator ruchu pakietowego D-ITG. Ma on dość dobry [manual (format pdf)](https://traffic.comics.unina.it/software/ITG/manual/D-ITG-2.8.1-manual.pdf), dlatego tutaj pomijamy szczegółowy opis zasad jego wykorzystania. Interesujące nas definicje/opisy zamieszczone są tam na stronie **13** (_Inter-departure time options_) i w jej okolicach. Końcowa część dokumentu zawiera przykładowe komendy dla generowania strumieni różnych typów. Dodatkowo, w naszym skrypcie `lbr.sh` (linie 218-251) znajdują się skomentowane przykłady ("działających") komend opracowanych na nasze potrzeby. Na nich powinniśmy bazować, dostosowując jedynie wartości wybranych parametrów do poszczególnych pomiarów.
+Jak już wspomniano, wykorzystujemy generator ruchu pakietowego D-ITG. Ma on dość dobry [manual (format pdf)](https://traffic.comics.unina.it/software/ITG/manual/D-ITG-2.8.1-manual.pdf), dlatego tutaj pomijamy szczegółowy opis zasad jego wykorzystania. Interesujące nas definicje/opisy zamieszczone są tam na stronie **13** (_Inter-departure time options_) i w jej okolicach. Końcowa część dokumentu zawiera przykładowe komendy dla generowania strumieni różnych typów. Dodatkowo, w naszym skrypcie `lbr.sh` (linie 230-263) znajdują się skomentowane przykłady ("działających") komend opracowanych na nasze potrzeby. Na nich powinniśmy bazować, dostosowując jedynie wartości wybranych parametrów do poszczególnych pomiarów.
 
 Dla typowych opisów strumieni pakietów obowiązuje też uwaga interpretacyjna dotycząca odstępu czasu między pakietami, zamieszczona na stronie **14** manuala (cyt.):
 
