@@ -78,7 +78,9 @@ W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h
 
 **Niniejszy dokument jest podstawową instrukcją do laboratorium**. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik ten należy traktować jak **integralną część** niniejszej instrukcji, o statusie Dodatku.
 
-Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. Preferujemy przy tym warianty konfiguracyjne A, C i D. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu. Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
+Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. Preferujemy przy tym warianty konfiguracyjne A, C i D.
+
+Nie oferujemy obrazów maszyn wirtualnych dedykowanych niniejszemu laboratorium. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu. Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
 
 ```
 $ sudo apt-get update
@@ -86,6 +88,8 @@ $ sudo apt-get install d-itg
 ```
 
 > :warning: **Uwaga**: W przypadku wykorzystania innej dystrybucji Linuksa niż Debian/Ubuntu może okazać się konieczne zbudowanie wersji binarnej D-ITG ze źródeł - wg opisu dostępnego [tutaj](https://github.com/jbucar/ditg/blob/master/INSTALL.).
+
+Instalacja i obsługa podsystemu WSL jest prosta i opisana w wielu tutorialach dostępnych w Internecie. Odsyłamy do tych źródeł w celu realizacji laboratorium w systemie Windows.
 
 # Ogólna forma ćwiczenia
 
