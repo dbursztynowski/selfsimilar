@@ -72,7 +72,7 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
 
 W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości pomiarów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.
 
-> :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w której realizujemy eksperyment. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania (odpowiednika) interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu h1-s1 z rysunku (to będzie interfejs fizyczny hosta h1, o nazwie na wzór eth0 czy enp0s25). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
+> :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w której realizujemy eksperyment. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania odpowiednika interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu h1-s1 (będzie to interfejs fizyczny hosta h1 o nazwie na wzór eth0 czy enp0s25). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
 
   ## Artefakty
 
@@ -105,12 +105,12 @@ Zwykle pracujemy w środowiskach zwirtualizowanych, na zróżnicowanym sprzęcie
 > Za realizację dodatkowego testu przy założeniu źródła o rozkładzie Weibull'a dla odstępu między kolejnymi generowanymi pakietami **zespołowi będzie przysługiwać bonus w wysokości 20%** nominalnego _maksa_ za ćwiczenie. (Podpowiedź: dla Weibulla, parametr `-C X` komendy nadajnika `ITGSend` zastępujemy parametrem `-W X Y`, gdzie `X` i `Y` to wartości współczynników, odpowiednio, _k_ i _Lambda_ rozkładu Weibulla).
 
 > [!Note]
-> Ze względu na uwarunkowania środowiska laboratoryjnego oraz rozwiązania implementacyjne generatora D-ITG poszczególne przebiegi pomiarowe (`pomiary elementarne`) przeprowadzane dla danego strumenia ruchu (precyzyjniej: dla zadanego zbioru wartości parametrów opisujących zmienność generowanego strumienia ruchu) dają różne wyniki. Dla danego zbioru parametrów wymagane jest więc uśrednienie wyników zebranych co najmniej z kilku przebiegów (pomiarów elementarnych). Dotychczasowe doświadczenia wskazują, że 10 prób pozwala uzyskać zadowalającą dokładność średniówki.
+> Ze względu na uwarunkowania środowiska laboratoryjnego oraz rozwiązania implementacyjne generatora D-ITG poszczególne przebiegi pomiarowe (`pomiary elementarne`) przeprowadzane dla danego strumenia ruchu (precyzyjniej: dla zadanego zbioru wartości parametrów opisujących zmienność generowanego strumienia ruchu) dają różne wyniki. Rozrzut wyników zaznacza się szczególnie mocno w maszynach wirtualnych (wariant B). Dla danego zbioru parametrów wymagane jest więc uśrednienie wyników zebranych z co najmniej kilku przebiegów (pomiarów elementarnych). Dotychczasowe doświadczenia wskazują, że 10 prób pozwala uzyskać zadowalającą dla nas dokładność średniówki.
 
 # Pomiar elementarny (_przebieg_)
 
 > [!Note]
-> Zaleca się, aby najlepiej podczas lektury niniejszej sekcji, a koniecznie przed przystąpieniem do lektury sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania), zespół przeprowadził rozpoznawczą serię eksperymentów z narzędziem D-ITG i z wykorzystaniem naszego środowiska sieciowego (tworzone jest skryptem `lbr.sh` opisanym poniżej). Nauki tu zdobyte ułatwią pracę z pozostałą częścią niniejszego dokumentu.
+> Zaleca się, aby najlepiej podczas lektury niniejszej sekcji, a koniecznie przed przystąpieniem do lektury sekcji [Opis zadań do wykonania](#opis-zadań-do-wykonania), zespół przeprowadził rozpoznawczą serię eksperymentów z narzędziem D-ITG i z wykorzystaniem naszego środowiska sieciowego (tworzone jest ono skryptem `lbr.sh` opisanym poniżej). Nauki tu zdobyte ułatwią pracę z pozostałą częścią niniejszego dokumentu.
 
   ## Sekwencja działań 
 
