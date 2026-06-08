@@ -287,9 +287,9 @@ W następnych dwóch podsekcjach przedstawiamy, kolejno, zasady parametryzacji p
 
 Na poniższym rysunku zebrano wprowadzone w tekście pojęcia w celu ułatwienia ich poprawnej interpretacji. Należy pamiętać o tym, że wymienione tu wartości parametru `X` oraz parametrów _obciążenie-odniesienia_ i _obciążenie-zmierzone_ pozostają względem siebie w relacjach _X >= max[obciążenie-odniesienia, obciążenie-zmierzone]_, _obciążenie-odniesienia <=> obciążenie zmierzone_.
 
-#### Struktura sesji pomiarowej
+#### Struktura serii pomiarowej
 <p align="center">
-<img src="images/seria-pomiarowa.jpg" alt="Sesja pomiarowa" width="700" style="display: block; margin: 0 auto" />
+<img src="images/seria-pomiarowa.jpg" alt="Seria pomiarowa" width="700" style="display: block; margin: 0 auto" />
 </p>
 
 ### Parametry: ustawienia
