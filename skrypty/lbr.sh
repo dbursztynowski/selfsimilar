@@ -189,7 +189,8 @@ ip link set dev s1-h2 txqueuelen 50000  # w istocie wartosc standardowa, ale ...
 
 # qdisc netem dla ustalenia przeplywnosci lacza i dlugosci bufora [pakiety]
 tc qdisc add dev s1-h2 root netem rate 1.2mbit limit 10
-# uwaga: kolejna zmiana parametrow "z reki": uzyc "change" zamiast "add" w komendzie podanej powyzej
+# uwaga: kolejna zmiana parametrow "z reki": uzyc "change" zamiast "add" w komendzie podanej powyzej, np.
+#   tc qdisc change dev s1-h2 root netem rate 1mbit limit 8
 # check current settings in other terminal
 # - as above, via checking systm file
 #cat /proc/sys/net/core/default_qdisc
