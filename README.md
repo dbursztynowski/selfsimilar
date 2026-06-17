@@ -302,13 +302,13 @@ Dla wszystkich serii pomiarowych stosujemy protokół UDP (parametr `-T UDP`), t
 
 * parametry specyficzne dla źródła ruchu ON/OFF
 
-W naszym przypadku zakładamy stałe czasy trwania stanów ON/OFF oznaczane, odpowiednio, _t<sub>on</sub>_ i _t<sub>off</sub>_, oraz stałą intensywność pakietową w stanie ON. Wtedy, z perspektywy zewnętrznego obserwatora, współczynnik wariancji obserwowanej chwilowej intensywności pakietowej dla takiego strumienia jest określony wzorem (warto to samodzielnie sprawdzić):
+W naszym przypadku zakładamy stałe czasy trwania stanów ON/OFF oznaczane, odpowiednio, _t<sub>on</sub>_ i _t<sub>off</sub>_, oraz stałą intensywność pakietową w stanie ON. Wtedy, z perspektywy zewnętrznego obserwatora, współczynnik wariancji obserwowanej chwilowej intensywności pakietowej dla takiego strumienia jest określony wzorem (warto to sprawdzić samodzielnie wyprowadzając tę zależność):
 
 $$
 CV = \frac{\sqrt{t_{off} \cdot (t_{on} + t_{off})}}{t_{on}}
 $$
 
-Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.618 \cdot t_{off}$, współczynnik wariancji obserwowanej chwilowej intensywności pakietowej przyjmuje wartość 1. Spodziewamy się, że dla źródeł ON/OFF warto skalować nasz pomiar z czasami _t<sub>on</sub>_ proporcjonalnie krótszymi względem _t<sub>off</sub>_ niż w tej zależności (czyli o wartościach współczynnika proporcjonalności względem _t<sub>off</sub>_ poniżej 1.618).
+Można zauważyć, że dla powyższego przypadku, przy zależności $t_{on}=1.618 \cdot t_{off}$, współczynnik wariancji obserwowanej chwilowej intensywności pakietowej przyjmuje wartość 1. Spodziewamy się, że dla źródeł ON/OFF warto skalować nasz pomiar z czasami _t<sub>on</sub>_ znacznie krótszymi względem _t<sub>off</sub>_ niż w tej zależności (czyli o wartościach współczynnika proporcjonalności względem _t<sub>off</sub>_ poniżej 1.618, np. nie więcej niż 1, choć konkretną wartość najlepiej dobrać eksperymentalnie, tak aby uzyskane wyniki zauważalnie różniły się od wyników dla rozkładu Poissona).
 
 ### Procedura
 
