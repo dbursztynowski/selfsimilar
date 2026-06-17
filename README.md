@@ -1,6 +1,6 @@
 # Co tutaj mamy
 
-Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów (dokładniej, chwilowych stochastycznych zmian intensywności napływu pakietów) obciążającego interfejs przełącznika na opóźnienie i straty pakietów na tym interfejsie. Celem ćwiczenia jest ugruntowanie wiedzy dotyczącej zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk. Ćwiczenie ma charakter metrologiczny i jego realizacja wymaga uważnego zapoznania się z instrukcją oraz zrozumienia koncepcji pomiarowej.
+Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów (dokładniej, chwilowych stochastycznych zmian intensywności napływu pakietów) obciążającego interfejs przełącznika na opóźnienie i straty pakietów na tym interfejsie. Celem ćwiczenia jest ugruntowanie wiedzy dotyczącej zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk. Ma ono charakter metrologiczny i jego realizacja wymaga uważnego **zapoznania się z instrukcją oraz zrozumienia koncepcji pomiarowej**.
 
 > :memo: **Wyjaśnienie**: W podstawowej wersji laboratorium nie generujemy ruchu samopodobnego (self-similar czy long-range dependent) w ścisłym rozumieniu, a jedynie ruch ON/OFF o współczynniku wariancji większym od 1. Zainteresowani użytkownicy mogą jednak w ramach prac własnych samodzielnie skonfigurować stronę nadawczą narzędzia D-ITG w celu emulowania strumieni bardziej zbliżonych do samopodobnych. W tym celu można użyć np. rozkładu Weibull'a w celu generowania czasu trwania stanów ON/OFF dla binarnych źródeł ruchu czy czasu między kolejnymi pakietami w stanie aktywnym źródła.
 
@@ -76,11 +76,11 @@ W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h
 
   ## Artefakty
 
-**Niniejszy dokument jest podstawową instrukcją do laboratorium**. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci oraz sposobu generowania ruchu pakietowego. W warstwie opisowej (komentarzy) plik ten należy traktować jak **integralną część** niniejszej instrukcji, o statusie Dodatku.
+**Niniejszy dokument jest podstawową instrukcją do laboratorium**. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci, sposobu generowania ruchu pakietowego, a także konfigurowania parametrów eksperymentu oraz sprawdzania ważniejszych metreyk z wykorzystaniem komend Linuksa. W warstwie opisowej (komentarzy) plik ten należy traktować jak **integralną część niniejszej instrukcji**, o statusie Dodatku.
 
 Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. Preferujemy przy tym warianty konfiguracyjne A, C i D.
 
-Nie oferujemy obrazów maszyn wirtualnych dedykowanych niniejszemu laboratorium. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu. Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
+Nie oferujemy obrazów maszyn wirtualnych dedykowanych niniejszemu laboratorium. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu (pamiętamy: wariant B uznajemy za ostatni wybór - ratunkowy). Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
 
 ```
 $ sudo apt-get update
@@ -89,7 +89,7 @@ $ sudo apt-get install d-itg
 
 > :warning: **Uwaga**: W przypadku wykorzystania innej dystrybucji Linuksa niż Debian/Ubuntu może okazać się konieczne zbudowanie wersji binarnej D-ITG ze źródeł - wg opisu dostępnego [tutaj](https://github.com/jbucar/ditg/blob/master/INSTALL.).
 
-Instalacja i obsługa podsystemu WSL jest prosta i opisana w wielu tutorialach dostępnych w Internecie. Odsyłamy do tych źródeł w celu realizacji laboratorium w systemie Windows.
+Instalacja oraz obsługa podsystemu WSL jest prosta i opisana w wielu tutorialach dostępnych w Internecie. Odsyłamy do tych źródeł w celu realizacji laboratorium w systemie Windows.
 
 # Ogólna forma ćwiczenia
 
