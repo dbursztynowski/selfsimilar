@@ -10,7 +10,7 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
 
 1. [Środowisko laboratoryjne](#środowisko-laboratoryjne)
    1. [Sieć](#sieć)
-   2. [Warianty wdrożeniowe środowiska](#warianty-wdrożeniowe-środowiska)
+   2. [Warianty wdrożeniowe](#warianty-wdrożeniowe)
    3. [Artefakty](#artefakty)
 2. [Ogólna forma ćwiczenia](#ogólna-forma-ćwiczenia)
 3. [Pomiar elementarny](#pomiar-elementarny-przebieg)
@@ -64,7 +64,7 @@ W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h
 
 > :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w której realizujemy eksperyment. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania odpowiednika interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu h1-s1 (będzie to interfejs fizyczny hosta h1 o nazwie na wzór eth0 czy enp0s25). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
 
-  ## Warianty wdrożeniowe środowiska
+  ## Warianty wdrożeniowe
 
 Przyjmujemy, że środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów wdrożeniowych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Podstawowe opcje to:
 
