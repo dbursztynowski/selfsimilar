@@ -8,7 +8,8 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
 
 1. [Środowisko laboratoryjne](#środowisko-laboratoryjne)
    1. [Sieć](#sieć)
-   2. [Artefakty](#artefakty)
+   2. [Środowisko wdrożeniowe](#środowisko-wdrożeniowe)
+   3. [Artefakty](#artefakty)
 2. [Ogólna forma ćwiczenia](#ogólna-forma-ćwiczenia)
 3. [Pomiar elementarny](#pomiar-elementarny-przebieg)
    1. [Sekwencja działań](#sekwencja-działań)
@@ -33,19 +34,6 @@ Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstru
   ## Sieć
 
 W zamyśle ćwiczenie ma zilustrować **istotę** wpływu, jaki charakterystyka ruchu pakietowego (płynny, losowy, wybuchowy/samopodobny) wywiera na metryki transferu pakietów (strata, opóźnienie, etc.). Z założenia ćwiczenie powinno też być niskobudżetowe - realizowane z użyciem sprzętu obliczeniowego powszechnego użytku. Dlatego "ilościowo-zasobowa" konfiguracja naszego środowiska (w szczególności rozmiar bufora w obserwowanym interfejsie przełącznika sieciowego) znacznie odbiega od tego, co moglibyśmy zobaczyć w urządzeniach rzeczywistej sieci. Ważne jest jednak, że pomimo narzuconych przez środowisko ograniczeń i przyjętych przez nas uproszczeń główny cel ćwiczenia nadal z powodzeniem daje się osiągnąć.
-
-> [!Note]
-> Przyjmujemy, że środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów wdrożeniowych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Podstawowe opcje to:
-> * **wariant A**: maszyna goszcząca pod Windows, gość linuksowy uzyskiwany w podsystemie WSL (Windows Subsystem for Linux); dla osób z Windows 11, wariant z podsystemem **WSL2** to zdecydowanie **najlepsze rozwiązanie**
-> * **wariant B**: maszyna goszcząca pod Windows, gość linuksowy uzyskiwany w klasycznej maszynie wirtualnej, np. pod Hyper-V/VirtualBox/VMWare...
-> * **wariant C**: maszyna goszcząca pod Linuksem; w tym przypadku eksperyment wykonywać wprost w maszynie goszczącej
-> * **wariant D**: dwie maszyny fizyczne pod Linuksem połączone w segmencie sieci lokalnej
->
-> Z punktu widzenia **komfortu pracy** preferowane są warianty A, C i ewentualnie D (wariant D jest dedykowany szczególnie zainteresowanym zespołom). Wariant B został sprawdzony dla Ubuntu i Debiana pod VirtualBox. Ze względu na stwierdzone mankamenty, zwłaszcza duża niestabilność pomiarów wynikającą z niskiej wydajności maszyn wirtualnych, jego użycie należy go uznać za absolutną ostateczność. Naszym zdaniem może on być użyty w przypadku, gdy zespół ma dostęp tylko do maszyn z systemem MacOS. Wprawdzie w MacOS istnieją możliwości konfigurowania urządzeń sieciowych funkcjonalnie równoważnych używanym przez nas urządzeniom linuksowym, jednak nasz skrypt w postaci podanej w repozytorium nie działa w środowisku MacOS. Natomiast szerszych prac wariantem B nie przeprowadzono w ramach przygotowywania ćwiczenia. Pod Windows zdecydowanie zalecamy wariant A. Ponadto, choć raczej nie będzie to ograniczenie aktywne w naszym przypadku, realizując wariant D w środowisku Linuks należy pamiętać o ograniczonej przez sprzęt (lokalne przełączniki/rutery) przepustowości sieci między hostami.
->
-> Powyższe warianty są do siebe podobne architektonicznie, z zastrzeżeniem, że przypadek D w pewnej mierze odstaje od pozostałych (dokładniej opiszemy go dalej). Ze względu na dominujące podobieństwa między wariantami, poniższa instrukcja zasadnczo jest wspólna dla nich. Sporządzona została opracowując i testując wariant **B**. To wariant "najtrudniejszy" z uwagi na wydajnościowe ograniczenia maszyn wirtualnych, a wyjaśnienie związanych z tym kwestii zajmuje w instrukcji najwięcej miejsca. W środowisku takim obserwujemy bowiem znaczący rozrzut pomiarów, a to wymaga zarówno dużej uważności w doborze punktu pracy sieci w ramach całego eksperymentu, jak i dodatkowych zabiegów przy obróbce wyników. W pozostałych przypadkach te negatywne efekty zaznaczają się w znacznie mniejszym stopniu (choć nadal warto mieć świadowość ich występowania i stosować metodyką pomiarową jak w wariancie B).
->
-> W niniejszej instrukcji zakłada się, że zespół potrafi samodzielnie przygowować środowisko gościa (zainstalować WSL pod Windows w wariancie A lub skonfigurować maszynę wirtualną w wariancie B) lub maszynę goszczącą (dla wariantów C i D) do przeprowadzenia eksperymentów. W wariancie A, ponieważ WSL2 wykorzystuje akcelerację sprzętową, przed utworzeniem maszyny w WSL2 należy **odblokować wsparcie dla wirtualizacji** w BIOS (ustawienie _AMD-V_ lub _Intel VT-x_, zależnie od architektury procesora - detale należy doczytać w sieci). WSL2 jest dostępny tylko pod Windows 11 i w przypadku posiadania Windows 10 rekomendujemy aktualizację systemu do Win11 (dla Win10 dostępny jest tylko WSL1 - wg niektórych relacji o rząd wielkości wolniejszy od WSL2).
 
 Posługujemy się modelem prostej sieci emulowanej przez parę sieciowych przestrzeni nazw (ang. _newtork namespace_) reprezentujących terminale końcowe (hosty), które są dołączone do przełącznika realizowanego przez urządzenie typu _linux bridge_. Przełącznik ten modeluje ruter przenoszący ruch pakietowy pomiędzy hostami. Jako generator ruchu pakietowego wykorzystujemy narzędzie D-ITG (jego manual jest dostępny [tutaj](https://traffic.comics.unina.it/software/ITG/manual/)). Składa się nań kilka modułów-aplikacji służących różnym celom. Spośród niech, w laboratorium używamy generatora ruchu `ITGSend`, odbiornika ruchu `ITGRecv` oraz dekodera logów `ITGDec`. Sposób instalacji D-ITD przedstawiono w sekcji [Artefakty](#artefakty).
 
@@ -73,6 +61,23 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
 W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości pomiarów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.
 
 > :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w której realizujemy eksperyment. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania odpowiednika interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu h1-s1 (będzie to interfejs fizyczny hosta h1 o nazwie na wzór eth0 czy enp0s25). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
+
+  ## Środowisko wdrożeniowe
+
+Przyjmujemy, że środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów wdrożeniowych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Podstawowe opcje to:
+
+* **wariant A**: maszyna goszcząca pod Windows, gość linuksowy uzyskiwany w podsystemie WSL (Windows Subsystem for Linux); dla osób z Windows 11, wariant z podsystemem **WSL2** to zdecydowanie **najlepsze rozwiązanie**
+* **wariant B**: maszyna goszcząca pod Windows, gość linuksowy uzyskiwany w klasycznej maszynie wirtualnej, np. pod Hyper-V/VirtualBox/VMWare...
+* **wariant C**: maszyna goszcząca pod Linuksem; w tym przypadku eksperyment wykonywać wprost w maszynie goszczącej
+* **wariant D**: dwie maszyny fizyczne pod Linuksem połączone w segmencie sieci lokalnej
+
+Z punktu widzenia **komfortu pracy** preferowane są warianty A, C i ewentualnie D (wariant D jest dedykowany szczególnie zainteresowanym zespołom). Pod Windows zdecydowanie zalecamy wariant A. Ponadto, choć raczej nie będzie to ograniczenie aktywne w naszym przypadku, realizując wariant D w środowisku Linuks należy pamiętać o ograniczonej przez sprzęt (lokalne przełączniki/rutery) przepustowości sieci między hostami.
+
+Wariant B został sprawdzony na maszynie goszczącej pod Windows 11 i maszynami wirtualnymi Ubuntu i Debian pod VirtualBox. Ze względu na stwierdzone mankamenty, zwłaszcza dużą niestabilność pomiarów wynikającą z niskiej wydajności maszyn wirtualnych, użycie wariantu B należy go uznać za absolutną **ostateczność**. Naszym zdaniem może on być użyty w przypadku, gdy zespół ma dostęp tylko do maszyn z systemem MacOS. Wprawdzie w MacOS istnieją możliwości konfigurowania urządzeń sieciowych funkcjonalnie równoważnych używanym przez nas urządzeniom linuksowym, jednak nasz skrypt w postaci podanej w repozytorium nie działa w środowisku MacOS. Natomiast szerszych prac na wariantem B pod MacOS nie przeprowadzono w ramach przygotowywania niniejszego ćwiczenia.
+
+Wszystkie warianty są do siebe podobne architektonicznie, z zastrzeżeniem, że przypadek D w pewnej mierze odstaje od pozostałych (dokładniej opiszemy go dalej). Ze względu na dominujące podobieństwa między wariantami, poniższa instrukcja zasadniczo jest wspólna dla nich. Sporządzona jednak została opracowując i testując wariant **B**. To wariant "najtrudniejszy" z uwagi na wydajnościowe ograniczenia maszyn wirtualnych, a wyjaśnienie związanych z tym kwestii zajmuje w instrukcji najwięcej miejsca. W środowisku takim obserwujemy bowiem znaczący rozrzut pomiarów, a to wymaga zarówno dużej uważności w doborze punktu pracy sieci w ramach całego eksperymentu, jak i dodatkowych zabiegów przy obróbce wyników. W pozostałych przypadkach te negatywne efekty zaznaczają się w znacznie mniejszym stopniu (choć nadal warto mieć świadowość ich występowania i stosować metodyką pomiarową jak w wariancie B).
+
+W niniejszej instrukcji zakłada się, że zespół potrafi samodzielnie przygowować środowisko gościa (zainstalować WSL pod Windows w wariancie A lub skonfigurować maszynę wirtualną w wariancie B) lub maszynę goszczącą (dla wariantów C i D) do przeprowadzenia eksperymentów. W wariancie A, ponieważ WSL2 wykorzystuje akcelerację sprzętową, przed utworzeniem maszyny w WSL2 należy **odblokować wsparcie dla wirtualizacji** w BIOS (ustawienie _AMD-V_ lub _Intel VT-x_, zależnie od architektury procesora - detale należy doczytać w sieci). WSL2 jest dostępny tylko pod Windows 11 i w przypadku posiadania Windows 10 rekomendujemy aktualizację systemu do Win11 (dla Win10 dostępny jest tylko WSL1 - wg niektórych relacji o rząd wielkości wolniejszy od WSL2).
 
   ## Artefakty
 
