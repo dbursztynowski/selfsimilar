@@ -87,7 +87,9 @@ W niniejszej instrukcji zakłada się, że zespół potrafi samodzielnie przygow
 
 Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub wirtualnej (pod Windows, WSL to też forma lekkiej maszyny wirtualnej). Preferujemy przy tym warianty konfiguracyjne A, C i D.
 
-Nie oferujemy obrazów maszyn wirtualnych dedykowanych niniejszemu laboratorium. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu (pamiętamy: wariant B uznajemy za ostatni wybór - ratunkowy). Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
+Nie oferujemy obrazów maszyn wirtualnych dedykowanych niniejszemu laboratorium. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu (pamiętamy: wariant B uznajemy za ostatni wybór - ratunkowy).
+
+W przypadku każdego wariantu, w stosownej maszynie linuksowej należy zainstalować narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
 
 ```
 $ sudo apt-get update
