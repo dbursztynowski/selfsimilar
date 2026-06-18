@@ -83,9 +83,9 @@ W niniejszej instrukcji zakłada się, że zespół potrafi samodzielnie przygow
 
   ## Artefakty
 
-**Niniejszy dokument jest podstawową instrukcją do laboratorium**. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci, sposobu generowania ruchu pakietowego, a także konfigurowania parametrów eksperymentu oraz sprawdzania ważniejszych metreyk z wykorzystaniem komend Linuksa. W warstwie opisowej (komentarzy) plik ten należy traktować jak **integralną część niniejszej instrukcji**, o statusie Dodatku.
+**Niniejszy dokument jest podstawową instrukcją do laboratorium**. Dodatkowo, w pliku skryptu powłoki `lbr.sh` skomentowano szereg istotnych detali dotyczących emulowanej sieci, sposobu generowania ruchu pakietowego, a także konfigurowania parametrów eksperymentu oraz sprawdzania ważniejszych metryk z wykorzystaniem komend Linuksa. W warstwie opisowej (komentarzy) plik ten należy więc traktować jak **integralną część niniejszej instrukcji**, o statusie Dodatku.
 
-Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub w maszynie wirtualnej. Preferujemy przy tym warianty konfiguracyjne A, C i D.
+Jak wspomniano wcześniej, środowisko laboratoryjne można skonfigurować w linuksowej maszynie fizycznej (ang. _bare metal_) lub wirtualnej (pod Windows, WSL to też forma lekkiej maszyny wirtualnej). Preferujemy przy tym warianty konfiguracyjne A, C i D.
 
 Nie oferujemy obrazów maszyn wirtualnych dedykowanych niniejszemu laboratorium. W przypadku wariantu B, w ramach przedmiotu TESIN najwygodniejsze jest wykorzystanie dotąd używanej maszyny wirtualnej w dystrybucji Debian lub Ubuntu (pamiętamy: wariant B uznajemy za ostatni wybór - ratunkowy). Wystarczy zainstalować na niej narzędzie D-ITG oraz pobrać niezbędne skrypty do laboratorium dostępne w katalogu `skrypty` niniejszego repozytorium. W celu zainstalowania D-ITG pod Debian/Ubuntu wystarczy wykonać:
 
