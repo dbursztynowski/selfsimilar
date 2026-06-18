@@ -62,8 +62,6 @@ Schemat naszej sieci przedstawiono na poniższym rysunku. Bloki oznaczone jako `
 
 W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h1`, a w hoście `h2` działa strona odbiorcza D-ITG (moduł `ITGRecv`). Strumień ruchu generowany w `h1` przez proces `ITGSend` przepływa przez `s1` do hosta `h2` i tam jest odbierany przez proces `ITGRecv`. Proces `ITGRecv` tworzy log, na podstawie którego możemy uzyskać interesujące nas statystyki transferu pakietów. Naszym zadaniem będzie porównanie sprawności transferu pakietów dla strumieni ruchu o różnych charakterystykach. Dla podwyższenia przejrzystości pomiarów i ułatwienia interpretacji wyników założymy przy tym, że jedynym wąskim gardłem systemu będzie interfejs `s1-h2`, który zwymiarujemy w ten sposób, aby tylko na nim uwidaczniały się niekorzystne (ale dla nas ważne) zjawiska ruchowe.
 
-> :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w której realizujemy eksperyment. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania odpowiednika interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu h1-s1 (będzie to interfejs fizyczny hosta h1 o nazwie na wzór eth0 czy enp0s25). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
-
   ## Warianty wdrożeniowe
 
 Przyjmujemy, że środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów wdrożeniowych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Podstawowe opcje to:
@@ -72,6 +70,8 @@ Przyjmujemy, że środowisko laboratoryjne oparte jest na maszynach fizycznych l
 * **wariant B**: maszyna goszcząca pod Windows, gość linuksowy uzyskiwany w klasycznej maszynie wirtualnej, np. pod Hyper-V/VirtualBox/VMWare...
 * **wariant C**: maszyna goszcząca pod Linuksem; w tym przypadku eksperyment wykonywać wprost w maszynie goszczącej
 * **wariant D**: dwie maszyny fizyczne pod Linuksem połączone w segmencie sieci lokalnej
+
+> :bulb: **Komentarz dla wariantu wdrożeniowego D**: W wariancie **D** hosty h1 i h2 w architekturze naszej sieci są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), do krórej maszyny te są dołączone. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania odpowiednika interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu `h1-s1` zmieniając tę nazwę na właściwą (będzie to interfejs fizyczny hosta h1 o nazwie na wzór `eth0` czy `enp0s25`). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
 
 Z punktu widzenia **komfortu pracy** preferowane są warianty A, C i ewentualnie D (wariant D jest dedykowany szczególnie zainteresowanym zespołom). Pod Windows zdecydowanie zalecamy wariant A. Ponadto, choć raczej nie będzie to ograniczenie aktywne w naszym przypadku, realizując wariant D w środowisku Linuks należy pamiętać o ograniczonej przez sprzęt (lokalne przełączniki/rutery) przepustowości sieci między hostami.
 
