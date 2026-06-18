@@ -96,7 +96,7 @@ $ sudo apt-get install d-itg
 
 > :warning: **Uwaga**: W przypadku wykorzystania innej dystrybucji Linuksa niż Debian/Ubuntu może okazać się konieczne zbudowanie wersji binarnej D-ITG ze źródeł - wg opisu dostępnego [tutaj](https://github.com/jbucar/ditg/blob/master/INSTALL.).
 
-Instalacja oraz obsługa podsystemu WSL jest prosta i opisana w wielu tutorialach dostępnych w Internecie. Odsyłamy do tych źródeł w celu realizacji laboratorium w systemie Windows.
+Instalacja oraz obsługa podsystemu WSL jest prosta i opisana w wielu tutorialach dostępnych w Internecie. Odsyłamy do tych źródeł w celu realizacji laboratorium na maszynach goszczących z systemem Windows.
 
 # Ogólna forma ćwiczenia
 
