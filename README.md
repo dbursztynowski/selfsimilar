@@ -1,14 +1,16 @@
-# Co tutaj mamy
+# Pakietowy ruch samopodobny
+
+## Co tutaj mamy
 
 Repozytorium zawiera opis ćwiczenia laboratoryjnego, podczas którego demonstrujemy wpływ zmienności strumienia pakietów (dokładniej, chwilowych stochastycznych zmian intensywności napływu pakietów) obciążającego interfejs przełącznika na opóźnienie i straty pakietów na tym interfejsie. Celem ćwiczenia jest ugruntowanie wykładowej wiedzy dotyczącej zjawisk ruchowych zachodzących w sieciach pakietowych, a przy okazji zapoznanie się z przykładowymi narzędziami pomocnymi w analizie tych zjawisk. Ma ono charakter metrologiczny i jest realizowane w środowisku wrażliwym wydajnościowo. Dlatego jego przeprowadzenie wymaga uważnego **zapoznania się z instrukcją i plikiem `lbr.sh` oraz dobrego zrozumienia przedstawionej tu koncepcji pomiarowej**.
 
 > :memo: **Wyjaśnienie**: W podstawowej wersji laboratorium nie generujemy ruchu samopodobnego (self-similar czy long-range dependent) w ścisłym rozumieniu, a jedynie ruch ON/OFF o współczynniku wariancji większym od 1. Zainteresowani użytkownicy mogą jednak w ramach prac własnych samodzielnie skonfigurować stronę nadawczą narzędzia D-ITG w celu emulowania strumieni bardziej zbliżonych do samopodobnych. W tym celu można użyć np. rozkładu Weibull'a w celu generowania czasu trwania stanów ON/OFF dla binarnych źródeł ruchu czy czasu między kolejnymi pakietami w stanie aktywnym źródła.
 
-# Spis treści
+## Spis treści
 
 1. [Środowisko laboratoryjne](#środowisko-laboratoryjne)
    1. [Sieć](#sieć)
-   2. [Środowisko wdrożeniowe](#środowisko-wdrożeniowe)
+   2. [Warianty wdrożeniowe środowiska](#warianty-wdrożeniowe-środowiska)
    3. [Artefakty](#artefakty)
 2. [Ogólna forma ćwiczenia](#ogólna-forma-ćwiczenia)
 3. [Pomiar elementarny](#pomiar-elementarny-przebieg)
@@ -62,7 +64,7 @@ W naszym przypadku strona nadawcza D-ITG (moduł `ITGSend`) działa w hoście `h
 
 > :bulb: **Komentarz dla wariantu D**: W wariancie **D** hosty h1 i h2 są fizycznymi maszynami zespołu, a przełącznik s1 to fizyczna sieć (np. domowa), w której realizujemy eksperyment. Zakładamy, że w takim przypadku nie ma możliwości swobodnego konfigurowania odpowiednika interfejsu s1-h2. Zamiast tego, w wariancie D należy konfigurować odpowiednik interfejsu h1-s1 (będzie to interfejs fizyczny hosta h1 o nazwie na wzór eth0 czy enp0s25). Składniowo, wszystkie komendy konfiguracyjne są jednak takie same jak w pozostałych przypadkach.
 
-  ## Środowisko wdrożeniowe
+  ## Warianty wdrożeniowe środowiska
 
 Przyjmujemy, że środowisko laboratoryjne oparte jest na maszynach fizycznych lub wirtualnych pracujących pod systemem Linuks. Można wyróżnić wiele wariantów wdrożeniowych eksperymentu zależnych od systemu operacyjnego komputera goszczącego. Podstawowe opcje to:
 
